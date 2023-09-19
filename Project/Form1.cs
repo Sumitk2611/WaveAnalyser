@@ -16,6 +16,8 @@ namespace Project
         double t;
         double a;
         int count = 0;
+        int N = 10;
+        int f = 5;
 
         public Form1()
         {
@@ -31,14 +33,15 @@ namespace Project
         }
 
 
-        private void CreateAmplitudeChart(double a, double t)
+        private void CreateAmplitudeChart(double[] s)
         {
-            
-            /*for(int i = 0; i < a.Length && i < t.Length; i++)
-            {*/
-                chart1.Series[0].Points.AddXY(t, a);
-            /*}*/
-        }
+
+            for (int t = 0; t <s.Length; t++)
+            {
+                chart1.Series[0].Points.AddXY(t+count, s[t]);
+            }
+            count += s.Length;
+    }
 
         private void chart1_Click(object sender, EventArgs e)
         {
@@ -47,29 +50,56 @@ namespace Project
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            count++;
-            /*if (count > 10)
+            if (count > 10)
             {
                 timer1.Stop();
-            }*/
+            }
             UpdateChart();
         }
 
         private void UpdateChart()
         {
-            
-            double newValue = calculateSamples(1, 10, t);
-            
-            a = newValue;
-            CreateAmplitudeChart(a,t);
+            double[] s = calculateSamples(f, N);
+            CreateAmplitudeChart(s);
+            CreateFreqChart(s, N);
             t++;
         }
 
-        private double calculateSamples(int f, int N, double t)
+        private double[] calculateSamples(int f, int N)
         {
-            double a = Math.Cos(2 * Math.PI * f * t / ( N));
-            return a;
+            double[] s = new double[N];
+            for (int t = 0; t < N; t++)
+            {
+                s[t] = Math.Cos(2 * Math.PI * (t+count) * f / N);
+            }
+            return s;
         }
+
+        private void CreateFreqChart(double[] s, int N)
+        {
+            double[] A = DFT(s,N);
+            for(int f = 0;f < N; f++)
+            {
+                chart2.Series[0].Points.AddXY(f, Math.Abs(A[f]));
+            }
+            
+
+        }
+
+        private double[] DFT(double[] s, int N)
+        {
+            double[] A = new double[N];
+
+            for(int f = 0; f < N; f++)
+            {
+                for(int t = 0; t < N; t++)
+                {
+                    A[f] += s[t] * Math.Cos(2 * Math.PI * t * f / N);
+                }
+            }
+            return A;
+        }
+        
 
 
     }
