@@ -8,16 +8,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace Project
 {
     public partial class Form1 : Form
     {
-        double t;
-        double a;
+        
         int count = 0;
         int N = 10;
-        int f = 5;
+        int f = 3;
 
         public Form1()
         {
@@ -26,9 +26,9 @@ namespace Project
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            
            timer1.Interval = 1;
             timer1.Start();
-            
             
         }
 
@@ -50,10 +50,10 @@ namespace Project
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (count > 10)
+            /*if (count > 10)
             {
                 timer1.Stop();
-            }
+            }*/
             UpdateChart();
         }
 
@@ -62,7 +62,7 @@ namespace Project
             double[] s = calculateSamples(f, N);
             CreateAmplitudeChart(s);
             CreateFreqChart(s, N);
-            t++;
+            
         }
 
         private double[] calculateSamples(int f, int N)
@@ -99,8 +99,20 @@ namespace Project
             }
             return A;
         }
-        
 
+        /*private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        {
+            int newPosition = e.NewValue;
+            chart1.ChartAreas[0].AxisX.Minimum = newPosition;
+            chart1.ChartAreas[0].AxisX.Maximum = newPosition + 1000;
+            
+        }*/
+
+        private void ChartArea1_AxisViewChanged(object sender, ViewEventArgs e)
+        {
+            // Handle the zooming event here
+            // You can update your chart's data based on the new view range
+        }
 
     }
 }

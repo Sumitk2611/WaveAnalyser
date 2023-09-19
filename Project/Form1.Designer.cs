@@ -1,4 +1,6 @@
-﻿namespace Project
+﻿using System.Windows.Forms.DataVisualization.Charting;
+
+namespace Project
 {
     partial class Form1
     {
@@ -38,6 +40,7 @@
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.hScrollBar1 = new System.Windows.Forms.HScrollBar();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             this.SuspendLayout();
@@ -55,11 +58,23 @@
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(2003, 332);
+            this.chart1.Size = new System.Drawing.Size(1580, 332);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
-            
             this.chart1.Click += new System.EventHandler(this.chart1_Click);
+
+            chart1.ChartAreas["ChartArea1"].AxisX.ScaleView.Zoomable = true;
+            chart1.ChartAreas["ChartArea1"].AxisY.ScaleView.Zoomable = true;
+            chart1.ChartAreas["ChartArea1"].CursorX.AutoScroll = true;
+            chart1.ChartAreas["ChartArea1"].CursorY.AutoScroll = true;
+            chart1.ChartAreas["ChartArea1"].AxisX.ScrollBar.IsPositionedInside = false;
+            chart1.ChartAreas["ChartArea1"].AxisY.ScrollBar.IsPositionedInside = false;
+            chart1.ChartAreas["ChartArea1"].AxisX.ScaleView.SmallScrollMinSizeType = DateTimeIntervalType.Number;
+            chart1.ChartAreas["ChartArea1"].AxisX.ScaleView.SmallScrollMinSize = 1;
+            chart1.ChartAreas["ChartArea1"].AxisY.ScaleView.SmallScrollMinSizeType = DateTimeIntervalType.Number;
+            chart1.ChartAreas["ChartArea1"].AxisY.ScaleView.SmallScrollMinSize = 1;
+            
+            
             // 
             // timer1
             // 
@@ -81,11 +96,19 @@
             this.chart2.TabIndex = 1;
             this.chart2.Text = "chart2";
             // 
+            // hScrollBar1
+            // 
+            /*this.hScrollBar1.Location = new System.Drawing.Point(0, 0);
+            this.hScrollBar1.Name = "hScrollBar1";
+            this.hScrollBar1.Size = new System.Drawing.Size(80, 21);
+            this.hScrollBar1.TabIndex = 0;*/
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(2015, 745);
+            this.Controls.Add(this.hScrollBar1);
             this.Controls.Add(this.chart2);
             this.Controls.Add(this.chart1);
             this.Name = "Form1";
@@ -102,6 +125,7 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
+        private System.Windows.Forms.HScrollBar hScrollBar1;
     }
 }
 
