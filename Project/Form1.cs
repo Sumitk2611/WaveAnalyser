@@ -58,7 +58,7 @@ namespace Project
         private void UpdateChart()
         {
             
-            double newValue = calculateSamples(4, 44000, t);
+            double newValue = calculateSamples(1, 10, t);
             
             a = newValue;
             CreateAmplitudeChart(a,t);
