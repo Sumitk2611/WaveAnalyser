@@ -29,7 +29,7 @@ namespace Project
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            generateInfo();
+            modifyChart();
             timer1.Interval = 1;
             timer1.Start();
 

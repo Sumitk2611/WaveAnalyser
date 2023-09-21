@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace Project
@@ -66,6 +67,7 @@ namespace Project
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series1.Legend = "Legend1";
             series1.Name = "Series1";
+            series1.IsVisibleInLegend = false;
             this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(1860, 380);
             this.chart1.TabIndex = 0;
@@ -88,7 +90,8 @@ namespace Project
             this.chart2.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Grayscale;
             series2.ChartArea = "ChartArea1";
             series2.Legend = "Legend1";
-            series2.Name = "Series1";
+            series2.Name = "Sound Wave";
+            series2.IsVisibleInLegend = false;
             this.chart2.Series.Add(series2);
             this.chart2.Size = new System.Drawing.Size(1866, 334);
             this.chart2.TabIndex = 1;
@@ -107,6 +110,7 @@ namespace Project
             series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series3.Legend = "Legend1";
             series3.Name = "Series1";
+            series3.IsVisibleInLegend = false;
             this.chart3.Series.Add(series3);
             this.chart3.Size = new System.Drawing.Size(1866, 344);
             this.chart3.TabIndex = 3;
@@ -143,83 +147,63 @@ namespace Project
 
         }
 
-
-        private void generateInfo()
+        private void defineChartInfo(Chart chart, int flag)
         {
+            var chartArea1 = chart.ChartAreas[0];
+            if (flag == 1)
+            {
+                int position = 0;
+                int size = 10;
+                
+                var series = chart.Series[0];
+                chartArea1.AxisX.Title = "time";
+                chartArea1.AxisY.Title = "Amplitude";
+                series.BorderWidth = 3;
+                series.Color = Color.Yellow;
+                chartArea1.BackColor = Color.Black;
+                chartArea1.AxisX.MajorGrid.LineColor = Color.LawnGreen;
+                chartArea1.AxisX2.MajorGrid.LineColor = Color.LawnGreen;
+                chartArea1.AxisX.LineWidth = 2;
+                chartArea1.AxisY.MajorGrid.LineColor = Color.LawnGreen;
+                chartArea1.AxisY2.MajorGrid.LineColor = Color.LawnGreen;  
 
+                chartArea1.AxisX.Minimum = 0;
+                chartArea1.CursorX.AutoScroll = true;
+
+
+                chartArea1.AxisX.ScaleView.Zoomable = true;
+                chartArea1.AxisX.ScaleView.SizeType = DateTimeIntervalType.Number;
+
+                chartArea1.AxisX.ScaleView.Zoom(position, size);
+
+                chartArea1.AxisX.ScrollBar.ButtonStyle = ScrollBarButtonStyles.SmallScroll;
+
+                chartArea1.AxisX.ScaleView.SmallScrollSize = 10;
+                chartArea1.AxisX.ScrollBar.ButtonColor = Color.WhiteSmoke;
+                chartArea1.AxisX.ScrollBar.LineColor = Color.White;
+                chartArea1.AxisX.ScrollBar.IsPositionedInside = true;
+                chartArea1.CursorX.AutoScroll = true;
+                chartArea1.CursorX.IsUserSelectionEnabled = true;
+                /*string startupPath = Environment.CurrentDirectory;
+                startupPath += "\\headphone_wallpaper.jpg";
+
+                chartArea1.BackImage =  startupPath ;
+                chartArea1.BackImageAlignment = ChartImageAlignmentStyle.Top;*/
+            } else
+            {
+                chartArea1.AxisX.Title = "frequency";
+                chartArea1.AxisY.Title = "Amplitude";
+                chartArea1.AxisX.Minimum = 0;
+            }
+        }
+        
+
+        private void modifyChart()
+        {
+            defineChartInfo(chart1, 1);
+            defineChartInfo(chart2, 2);
+            defineChartInfo(chart3, 1);
             
-            //time-amplitude graph 1
-            this.chart1.ChartAreas[0].AxisX.Title = "time";
-            this.chart1.ChartAreas[0].AxisY.Title = "Amplitude";
-            var chartArea1 = this.chart1.ChartAreas[0];
-            chartArea1.AxisX.MinorGrid.Enabled = true;
-            this.chart1.Series[0].BorderWidth = 3;
-            
-            this.chart1.Series[0].Color = Color.Yellow;
-            
-
-            //add color
-            this.chart1.ChartAreas[0].BackColor = Color.Black;
-            this.chart1.ChartAreas[0].AxisX.MajorGrid.LineColor = Color.LawnGreen;
-            this.chart1.ChartAreas[0].AxisX2.MajorGrid.LineColor = Color.LawnGreen;
-            chartArea1.AxisX.LineWidth = 2;
-            this.chart1.ChartAreas[0].AxisY.MajorGrid.LineColor = Color.LawnGreen;
-            
-
-            // set view range to [0,max]
-            chartArea1.AxisX.Minimum = 0;
-            
-
-            // enable autoscroll
-            chartArea1.CursorX.AutoScroll = true;
-
-            // let's zoom to [0,blockSize] (e.g. [0,100])
-            chartArea1.AxisX.ScaleView.Zoomable = true;
-            chartArea1.AxisX.ScaleView.SizeType = DateTimeIntervalType.Number;
-            int position = 0;
-            int size = 10;
-            chartArea1.AxisX.ScaleView.Zoom(position, size);
-
-            // disable zoom-reset button (only scrollbar's arrows are available)
-            chartArea1.AxisX.ScrollBar.ButtonStyle = ScrollBarButtonStyles.SmallScroll;
-
-            // set scrollbar small change to blockSize (e.g. 100)
-            chartArea1.AxisX.ScaleView.SmallScrollSize = 10;
-            chartArea1.AxisX.ScrollBar.ButtonColor = Color.WhiteSmoke;
-            chartArea1.AxisX.ScrollBar.LineColor = Color.White;
-            chartArea1.AxisX.ScrollBar.IsPositionedInside = false;
-
-
-            //time-amplitude graph 2
-            this.chart3.ChartAreas[0].AxisX.Title = "time";
-            this.chart3.ChartAreas[0].AxisY.Title = "Amplitude";
-            var chartArea3 = this.chart3.ChartAreas[0];
-
-            // set view range to [0,max]
-            chartArea3.AxisX.Minimum = 0;
-            
-
-            // enable autoscroll
-            chartArea3.CursorX.AutoScroll = true;
-
-            // let's zoom to [0,blockSize] (e.g. [0,100])
-            chartArea3.AxisX.ScaleView.Zoomable = true;
-            chartArea3.AxisX.ScaleView.SizeType = DateTimeIntervalType.Number;
-            
-            chartArea3.AxisX.ScaleView.Zoom(position, size);
-
-            // disable zoom-reset button (only scrollbar's arrows are available)
-            chartArea3.AxisX.ScrollBar.ButtonStyle = ScrollBarButtonStyles.SmallScroll;
-
-            // set scrollbar small change to blockSize (e.g. 100)
-            chartArea3.AxisX.ScaleView.SmallScrollSize = 10;
-
-
-
-            //freq-amplitude graph
-            this.chart2.ChartAreas[0].AxisX.Title = "frequency";
-            this.chart2.ChartAreas[0].AxisY.Title = "Amplitude";
-            this.chart2.ChartAreas[0].AxisX.Minimum = 0;
         }
         #endregion
 
