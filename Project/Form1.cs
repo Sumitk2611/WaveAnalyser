@@ -17,7 +17,7 @@ namespace Project
         bool flag = false;
         int count = 0;
         int N = 10;
-        int f = 3;
+        int f = 1;
         int numberOfSamples = 100;
 
         public Form1()
@@ -72,9 +72,6 @@ namespace Project
                 displayDefault();
             }
             
-
-
-
         }
 
         private void displayDefault()
@@ -92,7 +89,7 @@ namespace Project
             double[] s = new double[N];
             for (int t = 0; t < N; t++)
             {
-                s[t] = Math.Cos(2 * Math.PI * (t+count) * f / N);
+                s[t] =10* Math.Cos(2 * Math.PI * (t+count) * f / N);
             }
             return s;
         }
@@ -148,5 +145,58 @@ namespace Project
             
             
         }
+        private void makeChart1Zoomable(object sender, MouseEventArgs e)
+        {
+            if (e.Delta < 0)
+            {
+                chart1.ChartAreas[0].AxisX.ScaleView.ZoomReset(1);
+                chart1.ChartAreas[0].AxisY.ScaleView.ZoomReset(1);
+            }
+            else
+            {
+
+
+                double xMin = chart1.ChartAreas[0].AxisX.ScaleView.ViewMinimum;
+                double xMax = chart1.ChartAreas[0].AxisX.ScaleView.ViewMaximum;
+                double yMin = chart1.ChartAreas[0].AxisY.ScaleView.ViewMinimum;
+                double yMax = chart1.ChartAreas[0].AxisY.ScaleView.ViewMaximum;
+
+                double posXStart = chart1.ChartAreas[0].AxisX.PixelPositionToValue(e.Location.X) - (xMax - xMin) / 4;
+                double posXFinish = chart1.ChartAreas[0].AxisX.PixelPositionToValue(e.Location.X) + (xMax - xMin) / 4;
+                double posYStart = chart1.ChartAreas[0].AxisY.PixelPositionToValue(e.Location.Y) - (yMax - yMin) / 4;
+                double posYFinish = chart1.ChartAreas[0].AxisY.PixelPositionToValue(e.Location.Y) + (yMax - yMin) / 4;
+
+                chart1.ChartAreas[0].AxisX.ScaleView.Zoom(posXStart, posXFinish,DateTimeIntervalType.Number, true);
+                chart1.ChartAreas[0].AxisY.ScaleView.Zoom(posYStart, posYFinish, DateTimeIntervalType.Number, true);
+            }
+        }
+
+        private void makeChart3Zoomable(object sender, MouseEventArgs e)
+        {
+            if (e.Delta < 0)
+            {
+                chart3.ChartAreas[0].AxisX.ScaleView.ZoomReset(1);
+                chart3.ChartAreas[0].AxisY.ScaleView.ZoomReset(1);
+            }
+            else
+            {
+
+
+                double xMin = chart3    .ChartAreas[0].AxisX.ScaleView.ViewMinimum;
+                double xMax = chart3.ChartAreas[0].AxisX.ScaleView.ViewMaximum;
+                double yMin = chart3.ChartAreas[0].AxisY.ScaleView.ViewMinimum;
+                double yMax = chart3.ChartAreas[0].AxisY.ScaleView.ViewMaximum;
+
+                double posXStart = chart3.ChartAreas[0].AxisX.PixelPositionToValue(e.Location.X) - (xMax - xMin) / 4;
+                double posXFinish = chart3.ChartAreas[0].AxisX.PixelPositionToValue(e.Location.X) + (xMax - xMin) / 4;
+                double posYStart = chart3.ChartAreas[0].AxisY.PixelPositionToValue(e.Location.Y) - (yMax - yMin) / 4;
+                double posYFinish = chart3.ChartAreas[0].AxisY.PixelPositionToValue(e.Location.Y) + (yMax - yMin) / 4;
+
+                chart3.ChartAreas[0].AxisX.ScaleView.Zoom(posXStart, posXFinish, DateTimeIntervalType.Number, true);
+                chart3.ChartAreas[0].AxisY.ScaleView.Zoom(posYStart, posYFinish, DateTimeIntervalType.Number, true);
+            }
+        }
+
+       
     }
 }

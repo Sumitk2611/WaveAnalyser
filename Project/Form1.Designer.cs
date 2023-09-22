@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace Project
@@ -72,6 +73,7 @@ namespace Project
             this.chart1.Size = new System.Drawing.Size(1860, 380);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
+            chart1.MouseWheel += new MouseEventHandler(makeChart1Zoomable);
             
             // 
             // timer1
@@ -96,7 +98,8 @@ namespace Project
             this.chart2.Size = new System.Drawing.Size(1866, 334);
             this.chart2.TabIndex = 1;
             this.chart2.Text = "chart2";
-            this.chart2.Click += new System.EventHandler(this.chart2_Click);
+            
+            
             // 
             // chart3
             // 
@@ -115,6 +118,7 @@ namespace Project
             this.chart3.Size = new System.Drawing.Size(1866, 344);
             this.chart3.TabIndex = 3;
             this.chart3.Text = "chart3";
+            chart3.MouseWheel += new MouseEventHandler(makeChart3Zoomable);
             // 
             // button1
             // 
@@ -169,14 +173,20 @@ namespace Project
 
                 chartArea1.AxisX.Minimum = 0;
                 chartArea1.CursorX.AutoScroll = true;
+                chartArea1.CursorY.AutoScroll = true; 
 
 
                 chartArea1.AxisX.ScaleView.Zoomable = true;
                 chartArea1.AxisX.ScaleView.SizeType = DateTimeIntervalType.Number;
 
+                chartArea1.AxisY.ScaleView.Zoomable = true;
+                chartArea1.AxisY.ScaleView.SizeType = DateTimeIntervalType.Number;
+
                 chartArea1.AxisX.ScaleView.Zoom(position, size);
+                chartArea1.AxisY.ScaleView.Zoom(-5, 5);
 
                 chartArea1.AxisX.ScrollBar.ButtonStyle = ScrollBarButtonStyles.SmallScroll;
+                chartArea1.AxisY.ScrollBar.ButtonStyle = ScrollBarButtonStyles.SmallScroll;
 
                 chartArea1.AxisX.ScaleView.SmallScrollSize = 10;
                 chartArea1.AxisX.ScrollBar.ButtonColor = Color.WhiteSmoke;
@@ -184,6 +194,16 @@ namespace Project
                 chartArea1.AxisX.ScrollBar.IsPositionedInside = true;
                 chartArea1.CursorX.AutoScroll = true;
                 chartArea1.CursorX.IsUserSelectionEnabled = true;
+                chartArea1.AxisX.LabelStyle.Format = "0";
+
+                chartArea1.AxisY.ScaleView.SmallScrollSize = 1;
+                chartArea1.AxisY.ScrollBar.ButtonColor = Color.WhiteSmoke;
+                chartArea1.AxisY.ScrollBar.LineColor = Color.White;
+                chartArea1.AxisY.ScrollBar.IsPositionedInside = true;
+                chartArea1.CursorX.AutoScroll = true;
+                chartArea1.CursorX.IsUserSelectionEnabled = true;
+                chartArea1.AxisY.LabelStyle.Format = "0.00";
+
                 /*string startupPath = Environment.CurrentDirectory;
                 startupPath += "\\headphone_wallpaper.jpg";
 
@@ -196,6 +216,7 @@ namespace Project
                 chartArea1.AxisX.Minimum = 0;
             }
         }
+        
         
 
         private void modifyChart()
