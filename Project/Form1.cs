@@ -78,7 +78,7 @@ namespace Project
             double[] s = new double[N];
             for (int t = 0; t < N; t++)
             {
-                s[t] =10* Math.Cos(2 * Math.PI * (t) * f / N);
+                s[t] =10* Math.Sin(2 * Math.PI * (t) * f / N) + 5 * Math.Cos(2 * Math.PI * t * 5/N);
             }
             return s;
         }
@@ -86,7 +86,7 @@ namespace Project
         private void CreateFreqChart(double[] s, int N)
         {
             double[] A = DFT(s,N);
-            for(int f = 0;f < N; f++)
+            for(int f = 0;f < N/2; f++)
             {
                 chart2.Series[0].Points.AddXY(f, Math.Abs(A[f]));
             }
@@ -96,11 +96,11 @@ namespace Project
 
         private double[] DFT(double[] s, int N)
         {
-            double[] A = new double[N];
+            double[] A = new double[N/2];
             double real;
             double imag;
 
-            for(int f = 0; f < N; f++)
+            for(int f = 0; f < N / 2; f++)
             {
                 real = 0;
                 imag = 0;
@@ -110,7 +110,7 @@ namespace Project
                     imag += -s[t] * Math.Sin(2 * Math.PI * t * f / N);
                     
                 }
-                A[f] += Math.Sqrt((real * real) + (imag * imag));
+                A[f] += Math.Sqrt((real * real) + (imag * imag)) / (N/2);
             }
             return A;
         }
