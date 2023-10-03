@@ -199,8 +199,8 @@ namespace Project
                 chartArea1.AxisY.ScaleView.Zoomable = true;
                 chartArea1.AxisY.ScaleView.SizeType = DateTimeIntervalType.Number;
 
-                chartArea1.AxisX.ScaleView.Zoom(position, size);
-                chartArea1.AxisY.ScaleView.Zoom(-5, 5);
+                /*chartArea1.AxisX.ScaleView.Zoom(position, size);*/
+                /*chartArea1.AxisY.ScaleView.Zoom(-5, 5);*/
 
                 chartArea1.AxisX.ScrollBar.ButtonStyle = ScrollBarButtonStyles.SmallScroll;
                 chartArea1.AxisY.ScrollBar.ButtonStyle = ScrollBarButtonStyles.SmallScroll;
@@ -231,6 +231,7 @@ namespace Project
                 chartArea1.AxisX.Title = "frequency";
                 chartArea1.AxisY.Title = "Amplitude";
                 chartArea1.AxisX.Minimum = 0;
+                chart.Series[0].Color = Color.Blue;
             }
         }
         

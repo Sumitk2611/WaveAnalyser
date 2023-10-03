@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
@@ -78,7 +79,7 @@ namespace Project
             double[] s = new double[N];
             for (int t = 0; t < N; t++)
             {
-                s[t] =10* Math.Sin(2 * Math.PI * (t) * f / N) + 5 * Math.Cos(2 * Math.PI * t * 5/N);
+                s[t] =10* Math.Sin(2 * Math.PI * (t) * f / N + Math.PI/2);
             }
             return s;
         }
@@ -182,7 +183,7 @@ namespace Project
             {
 
 
-                double xMin = chart3    .ChartAreas[0].AxisX.ScaleView.ViewMinimum;
+                double xMin = chart3.ChartAreas[0].AxisX.ScaleView.ViewMinimum;
                 double xMax = chart3.ChartAreas[0].AxisX.ScaleView.ViewMaximum;
                 double yMin = chart3.ChartAreas[0].AxisY.ScaleView.ViewMinimum;
                 double yMax = chart3.ChartAreas[0].AxisY.ScaleView.ViewMaximum;
@@ -231,17 +232,59 @@ namespace Project
         private void button2_Click(object sender, EventArgs e)
         {
             Form1 form1 = new Form1();
-            form1.ShowDialog();
+            form1.Show();
         }
 
         private void readFile(string filename)
         {
-            int count = 0;
+            if(Path.GetExtension(filename).Equals(".wav", StringComparison.OrdinalIgnoreCase))
+            {
+
+                byte[] data = File.ReadAllBytes(filename); 
+                int bitsPerSample = BitConverter.ToInt16(data, 34);
+                N = BitConverter.ToInt16(data, 24);
+                int channel = BitConverter.ToInt16(data, 22);
+
+                double[] s = null;
+                short[] audio16 = null;
+
+                if(bitsPerSample == 8)
+                {
+                    audio16 = Convert8BitTo16Bit(data);
+                    s = new double[audio16.Length];
+                    if(channel == 2)
+                    {
+                        
+                    }
+
+                } else if(bitsPerSample == 16)
+                {
+                    s = new double[data.Length / 2];
+                    audio16 = new short[data.Length / 2];
+
+                    if(channel == 2)
+                    {
+
+                    }
+                    Buffer.BlockCopy(data, 0, audio16, 0, data.Length);
+                    
+                }
+
+                const double MaxValue16Bit = 32767.0;
+                for (int i = 0; i < audio16.Length; i++)
+                {
+                    s[i] = audio16[i] / MaxValue16Bit;
+                    chart1.Series[0].Points.AddY(s[i]);
+                }
+                CreateFreqChart(s, N);
+            }
+           /* int count = 0;
             string audioFilePath = filename;
             var audioFile = new AudioFileReader(audioFilePath);
-            byte[] buffer = new byte[1024]; // Adjust the buffer size as needed
+            byte[] buffer = new byte[audioFile.WaveFormat.SampleRate * (int)audioFile.TotalTime.TotalSeconds]; // Adjust the buffer size as needed
             int bytesRead;
-            double[] audioSamples = new double[audioFile.WaveFormat.SampleRate];
+            double[] audioSamples = new double[audioFile.WaveFormat.SampleRate * (int)audioFile.TotalTime.TotalSeconds];
+            
             
             double sample;
             double maxAmplitude = 0;
@@ -261,11 +304,37 @@ namespace Project
             }
 
             chart1.ChartAreas[0].AxisY.ScaleView.Zoom(-maxAmplitude, maxAmplitude);
-            for (int i = 0;i < audioSamples.Length;i++)
+            Console.WriteLine(audioFile.WaveFormat.BitsPerSample);
+            if(audioFile.WaveFormat.BitsPerSample == 32)
             {
-                chart1.Series[0].Points.Add(audioSamples[i]);
+                for (int i = 0; i < audioSamples.Length; i++)
+                {
+                    chart1.Series[0].Points.Add(audioSamples[i]);
+                }
+
+                CreateFreqChart(audioSamples, audioFile.WaveFormat.SampleRate);
+            } else
+            {
+                UpdateChart();
+            }*/
+            
+        }
+
+        short[] Convert8BitTo16Bit(byte[] data)
+        {
+            int max8BitValue = 255; // Maximum value for 8-bit audio
+            int max16BitValue = short.MaxValue; // Maximum value for 16-bit audio
+            int factor = max16BitValue / max8BitValue;
+
+            
+            short[] output = new short[data.Length];
+
+            for(int i = 0; i < data.Length; i++)
+            {
+                short sample16Bit = (short)(factor * data[i]);
+                output[i] = sample16Bit;
             }
-            CreateFreqChart(audioSamples, audioFile.WaveFormat.SampleRate);
+            return output;
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -278,12 +347,11 @@ namespace Project
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 selectedFilePath = openFileDialog.FileName;
+                ClearChart();
                 readFile(selectedFilePath);
 
             } 
-            
-            
-            
+
         }
     }
 }
