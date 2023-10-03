@@ -34,6 +34,7 @@ namespace Project
         {
             modifyChart();
             displayDefault();
+            chart3.Visible = false;
 
         }
 
@@ -143,6 +144,7 @@ namespace Project
         private void ClearChart()
         {
             chart1.Series[0].Points.Clear();
+            chart2.Series[0].Points.Clear();
             chart3.Series[0].Points.Clear();
             
         }
@@ -254,7 +256,10 @@ namespace Project
                     s = new double[audio16.Length];
                     if(channel == 2)
                     {
-                        
+                        chart3.Visible = true;
+                    } else
+                    {
+                        chart3.Visible = false;
                     }
 
                 } else if(bitsPerSample == 16)
@@ -262,9 +267,13 @@ namespace Project
                     s = new double[data.Length / 2];
                     audio16 = new short[data.Length / 2];
 
-                    if(channel == 2)
+                    if (channel == 2)
                     {
-
+                        chart3.Visible = true;
+                    }
+                    else
+                    {
+                        chart3.Visible = false;
                     }
                     Buffer.BlockCopy(data, 0, audio16, 0, data.Length);
                     
