@@ -28,7 +28,7 @@ namespace Project
         static int channel;
         static double[][] data;
         const double MaxValue16Bit = 32767.0;
-
+        private List<DataPoint> selectedDataPoints = new List<DataPoint>();
 
 
         public Form1()
@@ -58,7 +58,6 @@ namespace Project
             }
             
     }
-
 
 
         private void UpdateChart()
@@ -406,7 +405,7 @@ namespace Project
 
         static double[] InterleaveStereoAudio(double[] leftChannel, double[] rightChannel)
         {
-            int numSamples = Math.Min(leftChannel.Length, rightChannel.Length);
+            int numSamples = Math.Min(leftChannel.Length, rightChannel.Length) /2;
             double[] interleavedSamples = new double[numSamples * 2]; // Interleaved stereo data
 
             for (int i = 0; i < numSamples; i++)
@@ -429,5 +428,32 @@ namespace Project
                 writeFile(fileOpen, data);
             }
         }
+
+       /* private void Chart_SelectionRangeChanging(object sender, CursorEventArgs e)
+        {
+            // Clear the previously selected data points
+            selectedDataPoints.Clear();
+        }
+
+        private void Chart_SelectionRangeChanged(object sender, CursorEventArgs e)
+        {
+            Chart chart = (Chart)sender;
+            ChartArea chartArea = chart.ChartAreas["ChartArea1"];
+            Series series = chart.Series[0];
+
+            // Determine the X-values of the selection range
+            double startX = chartArea.CursorX.SelectionStart;
+            double endX = chartArea.CursorX.SelectionEnd;
+
+            // Iterate through data points to find selected points
+            foreach (DataPoint point in series.Points)
+            {
+                if (point.XValue >= startX && point.XValue <= endX)
+                {
+                    selectedDataPoints.Add(point);
+                }
+            }
+
+        }*/
     }
 }
