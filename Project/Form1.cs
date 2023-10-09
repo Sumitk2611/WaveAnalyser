@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection.Emit;
+using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,11 +17,19 @@ using NAudio.Wave;
 
 namespace Project
 {
+    
     public partial class Form1 : Form
     {
-        
-        
-        
+
+        static string fileOpen;
+        static int N;
+        static int bitsPerSample;
+        static bool isStereo;
+        static int channel;
+        static double[][] data;
+        const double MaxValue16Bit = 32767.0;
+
+
 
         public Form1()
         {
@@ -192,22 +201,23 @@ namespace Project
             if (Path.GetExtension(filename).Equals(".wav", StringComparison.OrdinalIgnoreCase))
             {
 
-                byte[] data = File.ReadAllBytes(filename);
-                int bitsPerSample = BitConverter.ToInt16(data, 34);
-                int N = BitConverter.ToInt16(data, 24);
-                int channel = BitConverter.ToInt16(data, 22);
+                byte[] fileData = File.ReadAllBytes(filename);
+                bitsPerSample = BitConverter.ToInt16(fileData, 34);
+                N = BitConverter.ToInt16(fileData, 24);
+                channel = BitConverter.ToInt16(fileData, 22);
 
-                double[] s = null;
+                
                 short[] audio16 = null;
-                double[][]stereo = null;
+                double[][]s = new double [2][];
 
                 if (bitsPerSample == 8)
                 {
-                    audio16 = Convert8BitTo16Bit(data);
-                    s = new double[audio16.Length];
+                    audio16 = Convert8BitTo16Bit(fileData);
+                    s[0] = new double[audio16.Length];
                     if (channel == 2)
-                    { 
-                        stereo = readstereo(audio16);
+                    {
+                        
+                        s = readstereo(audio16);
                         chart3.Visible = true;
                         chart4.Visible = true;
                     } else
@@ -218,12 +228,12 @@ namespace Project
 
                 } else if (bitsPerSample == 16)
                 {
-                    s = new double[data.Length / 2];
-                    audio16 = new short[data.Length / 2];
-                    Buffer.BlockCopy(data, 0, audio16, 0, data.Length);
+                    s[0] = new double[fileData.Length / 2];
+                    audio16 = new short[fileData.Length / 2];
+                    Buffer.BlockCopy(fileData, 0, audio16, 0, fileData.Length);
                     if (channel == 2)
                     {
-                        stereo = readstereo(audio16);
+                        s = readstereo(audio16);
                         chart3.Visible = true;
                         chart4.Visible = true;
                     }
@@ -236,38 +246,36 @@ namespace Project
 
                 }
 
-                const double MaxValue16Bit = 32767.0;
                 if (channel == 1)
                 {
                     for (int i = 0; i < audio16.Length; i++)
                     {
-                        s[i] = audio16[i] / MaxValue16Bit;
-                        chart1.Series[0].Points.AddY(s[i]);
+                        s[0][i] = audio16[i] / MaxValue16Bit;
+                        chart1.Series[0].Points.AddY(s[0][i]);
                     }
                     
-                    CreateFreqChart(s, N, chart2);
+                    CreateFreqChart(s[0], N, chart2);
                     
                 } else if(channel == 2) 
                 {
                     for(int i = 0;i < audio16.Length/2 +1;i++)
                     {
-                        stereo[0][i] /= MaxValue16Bit;
-                        stereo[1][i] /= MaxValue16Bit;
-                        chart1.Series[0].Points.AddY(stereo[0][i]);
-                        chart3.Series[0].Points.AddY(stereo[1][i]);
+                        s[0][i] /= MaxValue16Bit;
+                        s[1][i] /= MaxValue16Bit;
+                        chart1.Series[0].Points.AddY(s[0][i]);
+                        chart3.Series[0].Points.AddY(s[1][i]);
                     }
 
-                    CreateFreqChart(stereo[0],N, chart2);
+                    CreateFreqChart(s[0],N, chart2);
 
-                    CreateFreqChart(stereo[1], N, chart4);
+                    CreateFreqChart(s[1], N, chart4);
 
                 }
-
+                data = s;
             }
-           
             
+           
         }
-
 
         double[][]readstereo(short[] audio16)
         {
@@ -299,8 +307,9 @@ namespace Project
         short[] Convert8BitTo16Bit(byte[] data)
         {
             int max8BitValue = 255; // Maximum value for 8-bit audio
-            int max16BitValue = short.MaxValue; // Maximum value for 16-bit audio
-            int factor = max16BitValue / max8BitValue;
+             // Maximum value for 16-bit audio
+            
+            int factor = (int)MaxValue16Bit / max8BitValue;
 
             
             short[] output = new short[data.Length];
@@ -326,10 +335,99 @@ namespace Project
                 ClearChart();
                 readFile(selectedFilePath);
 
-            } 
+            }
+            fileOpen = selectedFilePath;
 
         }
 
-       
+        private void writeFile(string filePath, double[][] audio)
+        {
+            byte[] audioData;
+            if (channel == 1)
+            {
+                audioData = ConvertDoubleArrayToByteArray(audio[0]);
+            } else
+            {
+                double[]samples = InterleaveStereoAudio(audio[0], audio[1]);
+                audioData = ConvertDoubleArrayToByteArray(samples);
+            }
+            
+            try
+            {
+                // Create a BinaryWriter to write binary data to the file
+                using (BinaryWriter writer = new BinaryWriter(File.Open(filePath, FileMode.Create)))
+                {
+                    // Write the RIFF header
+                    writer.Write(Encoding.ASCII.GetBytes("RIFF"));
+                    writer.Write(36 + audioData.Length); // File size - 36 bytes for the rest of the headers
+                    writer.Write(Encoding.ASCII.GetBytes("WAVE"));
+
+                    // Write the format chunk
+                    writer.Write(Encoding.ASCII.GetBytes("fmt "));
+                    writer.Write(16); // Subchunk1 size (16 bytes for PCM)
+                    writer.Write((short)1); // Audio format (PCM = 1)
+                    writer.Write((short)channel); // Number of channels
+                    writer.Write(N); // Sample rate
+                    writer.Write(N * channel * bitsPerSample / 8); // Byte rate
+                    writer.Write((short)(channel * bitsPerSample / 8)); // Block align
+                    writer.Write((short)bitsPerSample); // Bits per sample
+
+                    // Write the data chunk header
+                    writer.Write(Encoding.ASCII.GetBytes("data"));
+                    writer.Write(audioData.Length); // Data chunk size
+
+                    // Write the audio data
+                    writer.Write(audioData);
+
+                    MessageBox.Show("File was Successfully saved", "File Saved");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error creating WAV audio file: {ex.Message}");
+            }
+        }
+
+        static byte[] ConvertDoubleArrayToByteArray(double[] doubleSamples)
+        {
+            // Create a byte array with enough capacity to store all the double values
+            byte[] byteSamples = new byte[doubleSamples.Length * 2]; // Assuming 16-bit (2 bytes) per sample
+
+            // Convert each double sample to a 16-bit signed integer and store it in the byte array
+            for (int i = 0; i < doubleSamples.Length; i++)
+            {
+                short sampleValue = (short)(doubleSamples[i] * short.MaxValue);
+                byteSamples[i * 2] = (byte)(sampleValue & 0xFF);
+                byteSamples[i * 2 + 1] = (byte)((sampleValue >> 8) & 0xFF);
+            }
+
+            return byteSamples;
+        }
+
+        static double[] InterleaveStereoAudio(double[] leftChannel, double[] rightChannel)
+        {
+            int numSamples = Math.Min(leftChannel.Length, rightChannel.Length);
+            double[] interleavedSamples = new double[numSamples * 2]; // Interleaved stereo data
+
+            for (int i = 0; i < numSamples; i++)
+            {
+                interleavedSamples[i * 2] = leftChannel[i];     // Left channel
+                interleavedSamples[i * 2 + 1] = rightChannel[i]; // Right channel
+            }
+
+            return interleavedSamples;
+        }
+
+        private void save_Click(object sender, EventArgs e)
+        {
+           if(fileOpen == null)
+            {
+                MessageBox.Show("Could not save file\n There was no file open", "Error");
+            } 
+            else
+            {
+                writeFile(fileOpen, data);
+            }
+        }
     }
 }
