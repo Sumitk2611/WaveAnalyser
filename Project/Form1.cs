@@ -44,6 +44,7 @@ namespace Project
             displayDefault();
             chart3.Visible = false;
             chart4.Visible = false;
+            chart4.Series[0].Color = Color.Red;
 
         }
 
@@ -429,31 +430,33 @@ namespace Project
             }
         }
 
-       /* private void Chart_SelectionRangeChanging(object sender, CursorEventArgs e)
-        {
-            // Clear the previously selected data points
-            selectedDataPoints.Clear();
-        }
 
-        private void Chart_SelectionRangeChanged(object sender, CursorEventArgs e)
-        {
-            Chart chart = (Chart)sender;
-            ChartArea chartArea = chart.ChartAreas["ChartArea1"];
-            Series series = chart.Series[0];
 
-            // Determine the X-values of the selection range
-            double startX = chartArea.CursorX.SelectionStart;
-            double endX = chartArea.CursorX.SelectionEnd;
+        /* private void Chart_SelectionRangeChanging(object sender, CursorEventArgs e)
+         {
+             // Clear the previously selected data points
+             selectedDataPoints.Clear();
+         }
 
-            // Iterate through data points to find selected points
-            foreach (DataPoint point in series.Points)
-            {
-                if (point.XValue >= startX && point.XValue <= endX)
-                {
-                    selectedDataPoints.Add(point);
-                }
-            }
+         private void Chart_SelectionRangeChanged(object sender, CursorEventArgs e)
+         {
+             Chart chart = (Chart)sender;
+             ChartArea chartArea = chart.ChartAreas["ChartArea1"];
+             Series series = chart.Series[0];
 
-        }*/
+             // Determine the X-values of the selection range
+             double startX = chartArea.CursorX.SelectionStart;
+             double endX = chartArea.CursorX.SelectionEnd;
+
+             // Iterate through data points to find selected points
+             foreach (DataPoint point in series.Points)
+             {
+                 if (point.XValue >= startX && point.XValue <= endX)
+                 {
+                     selectedDataPoints.Add(point);
+                 }
+             }
+
+         }*/
     }
 }
