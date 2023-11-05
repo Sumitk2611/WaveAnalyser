@@ -28,6 +28,7 @@ namespace Project
         static int channel;
         static double[][] data;
         const double MaxValue16Bit = 32767.0;
+        double[] selectedSamples;
         private List<DataPoint> selectedDataPoints = new List<DataPoint>();
 
 
@@ -65,7 +66,7 @@ namespace Project
         {
             
             {
-                int N = 100;
+                N = 100;
                 int f = 1;
                 double[] s = calculateSamples(f, N);
                 CreateAmplitudeChart(s);
@@ -80,9 +81,9 @@ namespace Project
 
         private void displayDefault()
         {
-                chart1.Series[0].Points.AddXY(0, 0);
-                chart3.Series[0].Points.AddXY(0 , 0);
-                chart2.Series[0].Points.AddXY (0 , 0);
+            chart1.Series[0].Points.AddXY(0, 0);
+            chart3.Series[0].Points.AddXY(0 , 0);
+            chart2.Series[0].Points.AddXY (0 , 0);
             chart4.Series[0].Points.AddXY(0, 0);
 
 
@@ -101,52 +102,43 @@ namespace Project
         private void CreateFreqChart(double[] s, int N, Chart freqChart)
         {
             double[] A = DFT(s,N);
-            for(int f = 0;f < N/2; f++)
+            double maxVal = 0;
+           
+            for(int f = 0;f< s.Length; f++)
             {
+                if(maxVal < Math.Abs(A[f]))
+                    maxVal = A[f];
+
                 freqChart.Series[0].Points.AddXY(f, Math.Abs(A[f]));
             }
-            
+            freqChart.ChartAreas[0].AxisY.Maximum = maxVal;
 
         }
 
         private double[] DFT(double[] s, int N)
         {
-            double[] A = new double[N/2];
+            
             double real;
             double imag;
+            int n = s.Length;
+            double[] A = new double[n];
+            
 
-            for(int f = 0; f < N / 2; f++)
+            for (int f = 0; f < n; f++)
             {
                 real = 0;
                 imag = 0;
-                for(int t = 0; t < N; t++)
+                for(int t = 0; t < n; t++)
                 {
-                    real += s[t] * Math.Cos(2 * Math.PI * t * f / N);
-                    imag += -s[t] * Math.Sin(2 * Math.PI * t * f / N);
+                    real += (s[t] * Math.Cos(2 * Math.PI * t * f * (N/n)/N))/N;
+                    imag += (-s[t] * Math.Sin(2 * Math.PI * t * f* (N / n)/N))/N;
                     
                 }
-                A[f] += Math.Sqrt((real * real) + (imag * imag)) / (N/2);
+                A[f] += Math.Sqrt((real * real) + (imag * imag));
             }
             return A;
         }
 
-    
-
-        private void ChartArea1_AxisViewChanged(object sender, ViewEventArgs e)
-        {
-            // Handle the zooming event here
-            // You can update your chart's data based on the new view range
-        }
-
-        private void chart2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
-        {
-
-        }
 
         private void startbutton_click(object sender, EventArgs e)
         {
@@ -171,7 +163,6 @@ namespace Project
             }
             else
             {
-
 
                 double xMin = chart.ChartAreas[0].AxisX.ScaleView.ViewMinimum;
                 double xMax = chart.ChartAreas[0].AxisX.ScaleView.ViewMaximum;
@@ -251,10 +242,10 @@ namespace Project
                     for (int i = 0; i < audio16.Length; i++)
                     {
                         s[0][i] = audio16[i] / MaxValue16Bit;
-                        chart1.Series[0].Points.AddY(s[0][i]);
+                        chart1.Series[0].Points.AddXY(i, s[0][i]);
                     }
                     
-                    CreateFreqChart(s[0], N, chart2);
+                    /*CreateFreqChart(s[0], N, chart2);*/
                     
                 } else if(channel == 2) 
                 {
@@ -262,13 +253,13 @@ namespace Project
                     {
                         s[0][i] /= MaxValue16Bit;
                         s[1][i] /= MaxValue16Bit;
-                        chart1.Series[0].Points.AddY(s[0][i]);
-                        chart3.Series[0].Points.AddY(s[1][i]);
+                        chart1.Series[0].Points.AddXY(i,s[0][i]);
+                        chart3.Series[0].Points.AddXY(i,s[1][i]);
                     }
 
-                    CreateFreqChart(s[0],N, chart2);
+                    /*CreateFreqChart(s[0],N, chart2);
 
-                    CreateFreqChart(s[1], N, chart4);
+                    CreateFreqChart(s[1], N, chart4);*/
 
                 }
                 data = s;
@@ -430,33 +421,71 @@ namespace Project
             }
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            chart2.Series[0].Points.Clear();
+            selectedSamples = new double[selectedDataPoints.Count];
+            for (int i = 0; i < selectedDataPoints.Count; ++i)
+            {
+                selectedSamples[i] = selectedDataPoints[i].YValues[0];
+            }
+
+            CreateFreqChart(selectedSamples, N, chart2);
+
+            /*chart3.Series[0].Points.Clear();
+            foreach(DataPoint point in selectedDataPoints)
+            {
+                chart3.Series[0].Points.AddY(point.YValues[0]);
+            }
+            chart3.Visible = true;*/
+
+        }
 
 
-        /* private void Chart_SelectionRangeChanging(object sender, CursorEventArgs e)
-         {
-             // Clear the previously selected data points
-             selectedDataPoints.Clear();
-         }
+        private void Chart_SelectionRangeChanging(object sender, CursorEventArgs e)
+        {
+            // Clear the previously selected data points
+            selectedDataPoints.Clear();
+        }
 
-         private void Chart_SelectionRangeChanged(object sender, CursorEventArgs e)
-         {
-             Chart chart = (Chart)sender;
-             ChartArea chartArea = chart.ChartAreas["ChartArea1"];
-             Series series = chart.Series[0];
+        private void Chart_SelectionRangeChanged(object sender, CursorEventArgs e)
+        {
+            Chart chart = (Chart)sender;
+            ChartArea chartArea = chart.ChartAreas["ChartArea1"];
+            Series series = chart.Series[0];
 
-             // Determine the X-values of the selection range
-             double startX = chartArea.CursorX.SelectionStart;
-             double endX = chartArea.CursorX.SelectionEnd;
+            // Determine the X-values of the selection range
+            double startX = chartArea.CursorX.SelectionStart;
+            double endX = chartArea.CursorX.SelectionEnd;
+            if(startX> endX)
+            {
+                double temp = startX;
+                startX = endX;
+                endX = temp;
+                
+            }
+           
+            // Iterate through data points to find selected points
+            foreach (DataPoint point in series.Points)
+            {
+                if (point.XValue >= startX && point.XValue <= endX)
+                {
+                   selectedDataPoints.Add(point);
+                }
+            }
 
-             // Iterate through data points to find selected points
-             foreach (DataPoint point in series.Points)
-             {
-                 if (point.XValue >= startX && point.XValue <= endX)
-                 {
-                     selectedDataPoints.Add(point);
-                 }
-             }
+        }
 
-         }*/
+        private void button3_Click(object sender, EventArgs e)
+        {
+            chart4.Series[0].Points.Clear();
+            selectedSamples = new double[selectedDataPoints.Count];
+            for (int i = 0; i < selectedDataPoints.Count; ++i)
+            {
+                selectedSamples[i] = selectedDataPoints[i].YValues[0];
+            }
+
+            CreateFreqChart(selectedSamples, N, chart4);
+        }
     }
 }
