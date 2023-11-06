@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection.Emit;
+using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading;
@@ -18,8 +19,13 @@ using NAudio.Wave;
 namespace Project
 {
     
-    public partial class Form1 : Form
+    public partial class WaveAnalyzer : Form
     {
+        public struct RecordData
+        {
+            public IntPtr data;
+            public uint dataLength;
+        }
 
         static string fileOpen;
         static int N;
@@ -31,12 +37,14 @@ namespace Project
         double[] selectedSamples;
         private List<DataPoint> selectedDataPoints = new List<DataPoint>();
 
+        bool channel1AnalyzeBtnEnabled = false;
+        bool channel2AnalyzeBtnEnabled = false;
+        bool recordingStatus = false;
+        bool playStatus = false;
 
-        public Form1()
+        public WaveAnalyzer()
         {
-            
             InitializeComponent();
-        
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -47,6 +55,7 @@ namespace Project
             chart4.Visible = false;
             chart4.Series[0].Color = Color.Red;
 
+            InitRecorder();
         }
 
 
@@ -179,11 +188,9 @@ namespace Project
             }
         }
 
-
-
-        private void new_window_button_click(object sender, EventArgs e)
+        private void newWindowBtn_Click(object sender, EventArgs e)
         {
-            Form1 form1 = new Form1();
+            WaveAnalyzer form1 = new WaveAnalyzer();
             form1.Show();
         }
 
@@ -231,7 +238,7 @@ namespace Project
                     else
                     {
                         chart3.Visible = false;
-                        chart3.Visible = false;
+                        chart4.Visible = false;
                     }
                     
 
@@ -313,7 +320,7 @@ namespace Project
             return output;
         }
 
-        private void read_file_click(object sender, EventArgs e)
+        private void openFileBtn_Click(object sender, EventArgs e)
         {
             string selectedFilePath = null;
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -328,7 +335,6 @@ namespace Project
 
             }
             fileOpen = selectedFilePath;
-
         }
 
         private void writeFile(string filePath, double[][] audio)
@@ -409,38 +415,17 @@ namespace Project
             return interleavedSamples;
         }
 
-        private void save_Click(object sender, EventArgs e)
+        private void saveFileBtn_Click(object sender, EventArgs e)
         {
-           if(fileOpen == null)
+            if (fileOpen == null)
             {
                 MessageBox.Show("Could not save file\n There was no file open", "Error");
-            } 
+            }
             else
             {
                 writeFile(fileOpen, data);
             }
         }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            chart2.Series[0].Points.Clear();
-            selectedSamples = new double[selectedDataPoints.Count];
-            for (int i = 0; i < selectedDataPoints.Count; ++i)
-            {
-                selectedSamples[i] = selectedDataPoints[i].YValues[0];
-            }
-
-            CreateFreqChart(selectedSamples, N, chart2);
-
-            /*chart3.Series[0].Points.Clear();
-            foreach(DataPoint point in selectedDataPoints)
-            {
-                chart3.Series[0].Points.AddY(point.YValues[0]);
-            }
-            chart3.Visible = true;*/
-
-        }
-
 
         private void Chart_SelectionRangeChanging(object sender, CursorEventArgs e)
         {
@@ -474,9 +459,24 @@ namespace Project
                 }
             }
 
+            //Enable analyze buttons
+            this.channel1AnalyzeBtn.Enabled = sender == chart1 && this.chart1.Series[0].Points.Count > 0 && this.selectedDataPoints.Count > 0;
+            this.channel2AnalyzeBtn.Enabled = sender == chart2 && this.chart3.Series[0].Points.Count > 0 && this.selectedDataPoints.Count > 0;
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void channel1AnalyzeBtn_Click(object sender, EventArgs e)
+        {
+            chart2.Series[0].Points.Clear();
+            selectedSamples = new double[selectedDataPoints.Count];
+            for (int i = 0; i < selectedDataPoints.Count; ++i)
+            {
+                selectedSamples[i] = selectedDataPoints[i].YValues[0];
+            }
+            
+            CreateFreqChart(selectedSamples, N, chart2);
+        }
+
+        private void channel2AnalyzeBtn_Click(object sender, EventArgs e)
         {
             chart4.Series[0].Points.Clear();
             selectedSamples = new double[selectedDataPoints.Count];
@@ -486,6 +486,71 @@ namespace Project
             }
 
             CreateFreqChart(selectedSamples, N, chart4);
+        }
+
+
+
+
+        /*
+         * Recorder
+         */
+
+        [DllImport("..\\..\\..\\Recorder_DLL\\recorder_dll.dll", CharSet = CharSet.Auto)]
+        public static extern bool InitRecorder();
+
+        [DllImport("..\\..\\..\\Recorder_DLL\\recorder_dll.dll", CharSet = CharSet.Auto)]
+        public static extern void StartRec();
+
+        [DllImport("..\\..\\..\\Recorder_DLL\\recorder_dll.dll", CharSet = CharSet.Auto)]
+        public static extern RecordData StopRec();
+
+        [DllImport("..\\..\\..\\Recorder_DLL\\recorder_dll.dll", CharSet = CharSet.Auto)]
+        public static extern void PlayRec();
+        [DllImport("..\\..\\..\\Recorder_DLL\\recorder_dll.dll", CharSet = CharSet.Auto)]
+        public static extern void PauseRec();
+        [DllImport("..\\..\\..\\Recorder_DLL\\recorder_dll.dll", CharSet = CharSet.Auto)]
+        public static extern RecordData GetData();
+
+
+        private void recordBtn_Click(object sender, EventArgs e)
+        {
+            if (recordingStatus)
+            {
+                RecordData data = StopRec();
+                recordingStatus = false;
+                recordBtn.Text = "Start";
+                N = 22050;
+                //Display sound wave
+                ClearChart();
+                unsafe
+                {
+                    if (data.data != IntPtr.Zero && data.dataLength != 0)
+                    {
+
+                        for (int i = 0; i < data.dataLength; i++)
+                        {
+                            byte* buffer = (byte*)data.data;
+                            chart1.Series[0].Points.AddXY(i, buffer[i]);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                StartRec();
+                recordingStatus = true;
+                recordBtn.Text = "Stop";
+            }
+        }
+
+        private void playBtn_Click(object sender, EventArgs e)
+        {
+            PlayRec();
+        }
+
+        private void pauseBtn_Click(object sender, EventArgs e)
+        {
+            PauseRec();
         }
     }
 }
