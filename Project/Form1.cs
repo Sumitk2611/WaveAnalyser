@@ -35,7 +35,7 @@ namespace Project
         static double[][] data;
         const double MaxValue16Bit = 32767.0;
         double[] selectedSamples;
-        private List<DataPoint> selectedDataPoints = new List<DataPoint>();
+  
 
         bool channel1AnalyzeBtnEnabled = false;
         bool channel2AnalyzeBtnEnabled = false;
@@ -430,7 +430,11 @@ namespace Project
         private void Chart_SelectionRangeChanging(object sender, CursorEventArgs e)
         {
             // Clear the previously selected data points
-            selectedDataPoints.Clear();
+            if (selectedSamples == null) return;
+            for(int i = 0; i < selectedSamples.Length; ++i)
+            {
+                selectedSamples[i] = 0;
+            }
         }
 
         private void Chart_SelectionRangeChanged(object sender, CursorEventArgs e)
@@ -442,6 +446,8 @@ namespace Project
             // Determine the X-values of the selection range
             double startX = chartArea.CursorX.SelectionStart;
             double endX = chartArea.CursorX.SelectionEnd;
+
+            List<DataPoint> selectedDataPoints = new List<DataPoint>();
             if(startX> endX)
             {
                 double temp = startX;
@@ -458,37 +464,28 @@ namespace Project
                    selectedDataPoints.Add(point);
                 }
             }
-
-            //Enable analyze buttons
-            this.channel1AnalyzeBtn.Enabled = sender == chart1 && this.chart1.Series[0].Points.Count > 0 && this.selectedDataPoints.Count > 0;
-            this.channel2AnalyzeBtn.Enabled = sender == chart2 && this.chart3.Series[0].Points.Count > 0 && this.selectedDataPoints.Count > 0;
-        }
-
-        private void channel1AnalyzeBtn_Click(object sender, EventArgs e)
-        {
-            chart2.Series[0].Points.Clear();
             selectedSamples = new double[selectedDataPoints.Count];
             for (int i = 0; i < selectedDataPoints.Count; ++i)
             {
                 selectedSamples[i] = selectedDataPoints[i].YValues[0];
             }
-            
+
+            //Enable analyze buttons
+            this.channel1AnalyzeBtn.Enabled = sender == chart1 && this.chart1.Series[0].Points.Count > 0 && this.selectedSamples.Length > 0;
+            this.channel2AnalyzeBtn.Enabled = sender == chart3 && this.chart3.Series[0].Points.Count > 0 && this.selectedSamples.Length > 0;
+        }
+
+        private void channel1AnalyzeBtn_Click(object sender, EventArgs e)
+        {
+            chart2.Series[0].Points.Clear();
             CreateFreqChart(selectedSamples, N, chart2);
         }
 
         private void channel2AnalyzeBtn_Click(object sender, EventArgs e)
         {
             chart4.Series[0].Points.Clear();
-            selectedSamples = new double[selectedDataPoints.Count];
-            for (int i = 0; i < selectedDataPoints.Count; ++i)
-            {
-                selectedSamples[i] = selectedDataPoints[i].YValues[0];
-            }
-
             CreateFreqChart(selectedSamples, N, chart4);
         }
-
-
 
 
         /*
@@ -551,6 +548,35 @@ namespace Project
         private void pauseBtn_Click(object sender, EventArgs e)
         {
             PauseRec();
+        }
+
+        private void pasteToChart1_Click(object sender, EventArgs e)
+        {
+            pasteToChart(chart1);
+        }
+
+
+        private void pasteToChart2_Click(object sender, EventArgs e)
+        {
+            pasteToChart(chart2);
+        }
+        private void pasteToChart(Chart chart)
+        {
+            string doubleArrayAsString = Clipboard.GetText();
+            string[] stringValues = doubleArrayAsString.Split(',');
+            double[] s = Array.ConvertAll(stringValues, double.Parse);
+            double lastXvalue = chart.Series[0].Points.Count - 1;
+            for (int t = 0; t < s.Length; t++)
+            {
+                chart.Series[0].Points.AddXY(t + lastXvalue, s[t]);
+            }
+        }
+
+        //Copys the points from the charts
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string doubleArrayAsString = string.Join(",", selectedSamples);
+            Clipboard.SetText(doubleArrayAsString);
         }
     }
 }
