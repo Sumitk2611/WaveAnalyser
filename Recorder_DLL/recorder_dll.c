@@ -16,6 +16,7 @@ PBYTE pSaveBuffer;
 DWORD dwDataLength;
 HINSTANCE dllInstance;
 HWND wHwnd;
+WAVEFORMATEX waveform;
 
 typedef struct recordData{
     PBYTE data;
@@ -72,6 +73,21 @@ __declspec (dllexport) VOID PauseRec() {
     PostMessage(wHwnd, WM_COMMAND, MAKEWPARAM(IDC_PLAY_PAUSE, 0), 0);
 }
 
+__declspec (dllexport) VOID SetData(recordData data) {
+    pSaveBuffer = data.data;
+    dwDataLength = data.dataLength;
+}
+
+__declspec (dllexport) VOID SetRecorderSpecs(int sampleSize, int sampleRate, int channels) {
+    waveform.wFormatTag = WAVE_FORMAT_PCM;
+    waveform.nChannels = channels;
+    waveform.nSamplesPerSec = sampleRate;
+    waveform.nAvgBytesPerSec = sampleRate;
+    waveform.nBlockAlign = (sampleSize / 8) * channels;
+    waveform.wBitsPerSample = sampleSize;
+    waveform.cbSize = 0;
+}
+
 void ReverseMemory(BYTE* pBuffer, int iLength)
 {
     BYTE b;
@@ -96,7 +112,6 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
     static PWAVEHDR     pWaveHdr1, pWaveHdr2;
     static TCHAR        szOpenError[] = TEXT("Error opening waveform audio!");
     static TCHAR        szMemError[] = TEXT("Error allocating memory!");
-    static WAVEFORMATEX waveform;
 
     switch (message)
     {
@@ -138,13 +153,13 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             // Open waveform audio for input
 
-            waveform.wFormatTag = WAVE_FORMAT_PCM;
-            waveform.nChannels = 1;
-            waveform.nSamplesPerSec = 11025;
-            waveform.nAvgBytesPerSec = 11025;
-            waveform.nBlockAlign = 1;
-            waveform.wBitsPerSample = 8;
-            waveform.cbSize = 0;
+            //waveform.wFormatTag = WAVE_FORMAT_PCM;
+            //waveform.nChannels = 1;
+            //waveform.nSamplesPerSec = 11025;
+            //waveform.nAvgBytesPerSec = 11025;
+            //waveform.nBlockAlign = 1;
+            //waveform.wBitsPerSample = 8;
+            //waveform.cbSize = 0;
 
             if (waveInOpen(&hWaveIn, WAVE_MAPPER, &waveform,
                 (DWORD)hwnd, 0, CALLBACK_WINDOW))
@@ -190,13 +205,13 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
         case IDC_PLAY_BEG:
             // Open waveform audio for output
 
-            waveform.wFormatTag = WAVE_FORMAT_PCM;
-            waveform.nChannels = 1;
-            waveform.nSamplesPerSec = 11025;
-            waveform.nAvgBytesPerSec = 11025;
-            waveform.nBlockAlign = 1;
-            waveform.wBitsPerSample = 8;
-            waveform.cbSize = 0;
+            //waveform.wFormatTag = WAVE_FORMAT_PCM;
+            //waveform.nChannels = 1;
+            //waveform.nSamplesPerSec = 11025;
+            //waveform.nAvgBytesPerSec = 11025;
+            //waveform.nBlockAlign = 1;
+            //waveform.wBitsPerSample = 8;
+            //waveform.cbSize = 0;
 
             if (waveOutOpen(&hWaveOut, WAVE_MAPPER, &waveform,
                 (DWORD)hwnd, 0, CALLBACK_WINDOW))
