@@ -32,10 +32,11 @@ namespace Project
         static int bitsPerSample;
         static bool isStereo;
         static int channel;
-        static double[][] data;
+        static double[][] storedData;
         const double MaxValue16Bit = 32767.0;
         double[] selectedSamples;
-  
+        double startX = 0.0;
+        double endX = 0;
 
         bool channel1AnalyzeBtnEnabled = false;
         bool channel2AnalyzeBtnEnabled = false;
@@ -59,13 +60,14 @@ namespace Project
         }
 
 
-        private void CreateAmplitudeChart(double[] s)
+        private void CreateAmplitudeChart(double[] s, Chart chart)
         {
+            chart.Series[0].Points.Clear();
             
             for (int t = 0; t <s.Length; t++)
             {
-                chart1.Series[0].Points.AddXY(t, s[t]);
-                chart3.Series[0].Points.AddXY(t, s[t]);
+
+                chart.Series[0].Points.AddXY(t, s[t]);
             }
             
     }
@@ -78,7 +80,7 @@ namespace Project
                 N = 100;
                 int f = 1;
                 double[] s = calculateSamples(f, N);
-                CreateAmplitudeChart(s);
+                CreateAmplitudeChart(s, chart1);
                 CreateFreqChart(s, N, chart2);
                 int width = chart1.Width;
                 int height = chart1.Height;
@@ -194,9 +196,18 @@ namespace Project
             form1.Show();
         }
 
+       
+
         private void readFile(string filename)
         {
-            if (Path.GetExtension(filename).Equals(".wav", StringComparison.OrdinalIgnoreCase))
+
+            byte[] headerBytes = new byte[12];
+            using (FileStream fs = new FileStream(filename,FileMode.Open, FileAccess.Read))
+            {
+                fs.Read(headerBytes, 0, headerBytes.Length);  
+            }
+            string waveFormat = Encoding.ASCII.GetString(headerBytes, 8, 4);
+            if (waveFormat == "WAVE")
             {
 
                 byte[] fileData = File.ReadAllBytes(filename);
@@ -269,7 +280,7 @@ namespace Project
                     CreateFreqChart(s[1], N, chart4);*/
 
                 }
-                data = s;
+                storedData = s;
             }
             
            
@@ -403,13 +414,30 @@ namespace Project
 
         static double[] InterleaveStereoAudio(double[] leftChannel, double[] rightChannel)
         {
-            int numSamples = Math.Min(leftChannel.Length, rightChannel.Length) /2;
+            int numSamples = Math.Max(leftChannel.Length, rightChannel.Length);
             double[] interleavedSamples = new double[numSamples * 2]; // Interleaved stereo data
 
             for (int i = 0; i < numSamples; i++)
             {
-                interleavedSamples[i * 2] = leftChannel[i];     // Left channel
-                interleavedSamples[i * 2 + 1] = rightChannel[i]; // Right channel
+                //leftChannel
+                if(leftChannel.Length - 1 >= i)
+                {
+                    interleavedSamples[i * 2] = leftChannel[i];
+                } else
+                {
+                    interleavedSamples[i * 2] = 0;
+
+                }
+
+                // Right channel
+                if (rightChannel.Length - 1 >= i)
+                {
+                    interleavedSamples[i * 2 + 1] = rightChannel[i];
+                } else
+                {
+                    interleavedSamples[i * 2 + 1] = 0;
+                }
+                 
             }
 
             return interleavedSamples;
@@ -423,7 +451,7 @@ namespace Project
             }
             else
             {
-                writeFile(fileOpen, data);
+                writeFile(fileOpen, storedData);
             }
         }
 
@@ -444,10 +472,11 @@ namespace Project
             Series series = chart.Series[0];
 
             // Determine the X-values of the selection range
-            double startX = chartArea.CursorX.SelectionStart;
-            double endX = chartArea.CursorX.SelectionEnd;
+            startX = chartArea.CursorX.SelectionStart;
+            endX = chartArea.CursorX.SelectionEnd;
 
             List<DataPoint> selectedDataPoints = new List<DataPoint>();
+            
             if(startX> endX)
             {
                 double temp = startX;
@@ -523,11 +552,12 @@ namespace Project
                 {
                     if (data.data != IntPtr.Zero && data.dataLength != 0)
                     {
-
+                        
                         for (int i = 0; i < data.dataLength; i++)
                         {
                             byte* buffer = (byte*)data.data;
                             chart1.Series[0].Points.AddXY(i, buffer[i]);
+                            
                         }
                     }
                 }
@@ -552,31 +582,103 @@ namespace Project
 
         private void pasteToChart1_Click(object sender, EventArgs e)
         {
-            pasteToChart(chart1);
+            
+            storedData[0] = pasteToChart(chart1); 
         }
 
 
-        private void pasteToChart2_Click(object sender, EventArgs e)
-        {
-            pasteToChart(chart2);
-        }
-        private void pasteToChart(Chart chart)
+        private double[] pasteToChart(Chart chart)
         {
             string doubleArrayAsString = Clipboard.GetText();
             string[] stringValues = doubleArrayAsString.Split(',');
             double[] s = Array.ConvertAll(stringValues, double.Parse);
+            double[] samples = new double[s.Length + chart.Series[0].Points.Count];
             double lastXvalue = chart.Series[0].Points.Count - 1;
-            for (int t = 0; t < s.Length; t++)
+            int counter = 0;
+            for (int t = 0; t < samples.Length; t++)
             {
-                chart.Series[0].Points.AddXY(t + lastXvalue, s[t]);
+                if(t == startX)
+                {
+                    for(int i = 0; i < s.Length; ++i,++t)
+                    {
+                        samples[t] = s[i];
+                    }
+                }
+                samples[t] = chart.Series[0].Points[counter].YValues[0];
+                counter++;
             }
+            CreateAmplitudeChart(samples, chart);
+            return samples;
         }
 
         //Copys the points from the charts
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if(selectedSamples == null) { 
+                MessageBox.Show("Nothing Selected", "Error");
+
+                return;
+            }
             string doubleArrayAsString = string.Join(",", selectedSamples);
             Clipboard.SetText(doubleArrayAsString);
+        }
+
+        private void pasteToChart2_Click_1(object sender, EventArgs e)
+        {
+            storedData[1] = pasteToChart(chart3);
+        }
+
+        
+
+        private void chart1ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            storedData[0] = cut(chart1);
+        }
+
+        private double[] cut(Chart chart)
+        {
+            if(selectedSamples == null)
+            {
+                MessageBox.Show("Nothing Selected", "Error");
+
+                return null;
+            }
+
+            string doubleArrayAsString = string.Join(",", selectedSamples);
+
+            Series samples = chart.Series[0];
+            int pointsRemoved = (int)(endX - startX);
+            double[] newSamples = new double[samples.Points.Count - pointsRemoved];
+            int counter = 0;
+            for (int t = 0; t < samples.Points.Count; ++t)
+            {
+                if (t >= startX && t <= endX)
+                {
+                    counter++;
+                    continue;
+                }
+
+                newSamples[t - counter] = samples.Points[t].YValues[0];
+            }
+            
+
+            CreateAmplitudeChart(newSamples, chart);
+
+            Clipboard.SetText(doubleArrayAsString);
+            return newSamples;
+        }
+
+        private void chart2ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            storedData[1] = cut(chart3);
+        }
+
+        private void rightClickonChart1(object sender, MouseEventArgs e)
+        {
+            if(e.Button == MouseButtons.Right)
+            {
+                //  
+            }
         }
     }
 }
