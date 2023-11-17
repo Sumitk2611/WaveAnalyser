@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -26,6 +27,7 @@ namespace Project
             public IntPtr data;
             public uint dataLength;
         }
+        static bool isTriangleWindow = false;
 
         static string fileOpen;
         static int N;
@@ -49,9 +51,12 @@ namespace Project
 
         double startX = 0.0;
         double endX = 0;
+        double fEndX = 0;
 
         bool channel1AnalyzeBtnEnabled = false;
         bool channel2AnalyzeBtnEnabled = false;
+
+        Chart sentFilterReq;
 
         public WaveAnalyzer()
         {
@@ -77,6 +82,7 @@ namespace Project
 
                 chart.Series[0].Points.AddXY(t, s[t]);
             }
+            chart.Visible = true;
             
     }
 
@@ -87,9 +93,10 @@ namespace Project
             {
                 N = 100;
                 int f = 1;
-                double[] s = calculateSamples(f, N);
-                CreateAmplitudeChart(s, chart1);
-                CreateFreqChart(s, N, chart2);
+                storedData = new double[1][];
+                storedData[0] = calculateSamples(f, N);
+               
+                CreateAmplitudeChart(storedData[0], chart1);
                 int width = chart1.Width;
                 int height = chart1.Height;
                 chart1.Size = new Size(width++, height++);
@@ -119,12 +126,15 @@ namespace Project
             for (int t = 0; t < N; t++)
             {
                 s[t] =10* Math.Sin(2 * Math.PI * (t) * f / N + Math.PI/2);
+/*                s[t] +=1* Math.Sin(2 * Math.PI * (t) * 25 / N + Math.PI/2);
+*/                s[t] +=1* Math.Sin(2 * Math.PI * (t) * 12 / N + Math.PI/2);
             }
             return s;
         }
 
         private void CreateFreqChart(double[] s, int N, Chart freqChart)
         {
+            freqChart.Series[0].Points.Clear();
             double[] A = DFT(s,N);
             double maxVal = 0;
            
@@ -136,6 +146,8 @@ namespace Project
                 freqChart.Series[0].Points.AddXY(f, Math.Abs(A[f]));
             }
             freqChart.ChartAreas[0].AxisY.Maximum = maxVal;
+            freqChart.Visible = true;
+
 
         }
 
@@ -154,8 +166,8 @@ namespace Project
                 imag = 0;
                 for(int t = 0; t < n; t++)
                 {
-                    real += (s[t] * Math.Cos(2 * Math.PI * t * f * (N/n)/N))/N;
-                    imag += (-s[t] * Math.Sin(2 * Math.PI * t * f* (N / n)/N))/N;
+                    real += (s[t] * Math.Cos(2 * Math.PI * t * f * (N/n)/n))/N;
+                    imag += (-s[t] * Math.Sin(2 * Math.PI * t * f* (N / n)/n))/N;
                     
                 }
                 A[f] += Math.Sqrt((real * real) + (imag * imag));
@@ -305,10 +317,10 @@ namespace Project
         {
             int leftCounter = 0;
             int rightCounter = 0;
-            int size = audio16.Length + 1;
+            int size = audio16.Length + 2;
             double[][] s = new double[2][];
-            s[0] = new double[size];
-            s[1] = new double[size];
+            s[0] = new double[size/2];
+            s[1] = new double[size/2];
             
             for (int i = 0; i < audio16.Length ; i++)
             {
@@ -368,7 +380,9 @@ namespace Project
             byte[] audioData;
             if (channel == 1)
             {
-                audioData = ConvertDoubleArrayToByteArray(audio[0]);
+                if(bitsPerSample == 8)
+                audioData = ConvertDoubleArrayToByteArray8bit(audio[0]);
+                else audioData = ConvertDoubleArrayToByteArray(audio[0]);
             } else
             {
                 double[]samples = InterleaveStereoAudio(audio[0], audio[1]);
@@ -411,6 +425,27 @@ namespace Project
             }
         }
 
+        static byte[] ConvertDoubleArrayToByteArray8bit(double[] doubleSamples)
+        {
+            // Create a byte array with enough capacity to store all the double values
+             // Assuming 16-bit (2 bytes) per sample
+            short[] shortSamples = new short[doubleSamples.Length];
+            // Convert each double sample to a 16-bit signed integer and store it in the byte array
+            for (int i = 0; i < doubleSamples.Length; i++)
+            {
+                shortSamples[i] = (short)(doubleSamples[i] * short.MaxValue);
+            }
+
+            byte[] byteSamples = new byte[shortSamples.Length];
+            for (int i = 0; i < shortSamples.Length; ++i)
+            {
+                byteSamples[i] = (byte)(255/MaxValue16Bit * shortSamples[i]);
+            }
+
+
+            return byteSamples;
+        }
+
         static byte[] ConvertDoubleArrayToByteArray(double[] doubleSamples)
         {
             // Create a byte array with enough capacity to store all the double values
@@ -429,7 +464,7 @@ namespace Project
 
         static double[] InterleaveStereoAudio(double[] leftChannel, double[] rightChannel)
         {
-            int numSamples = Math.Max(leftChannel.Length, rightChannel.Length);
+            int numSamples = Math.Max(leftChannel.Length, rightChannel.Length)/2;
             double[] interleavedSamples = new double[numSamples * 2]; // Interleaved stereo data
 
             for (int i = 0; i < numSamples; i++)
@@ -776,6 +811,168 @@ namespace Project
             this.statusStripSampleSizeLabel.Text = "Sample Size: " + bitsPerSample.ToString() + "-bit";
             this.statusStripChannels.Text = "Channels: " + channel.ToString();
         }
+
+        private void filter_Click(object sender, EventArgs e)
+        {
+            if (fEndX == 0)
+            {
+                MessageBox.Show("Nothing Selected", "Error");
+                return;
+            }
+
+            double [] filter = createFilter(fEndX, chart2.Series[0].Points.Count);
+            double[] filterInTimeDomain = InvDFT(filter, N);
+
+            storedData[0] = convolution(storedData[0], filterInTimeDomain);
+            if (channel == 2)
+                storedData[1] = convolution(storedData[1], filterInTimeDomain);
+            
+            for (int i = 0; i < selectedSamples.Length; ++i)
+            {
+                selectedSamples[i] = storedData[0][i + (int)startX ];
+            }
+            if (sentFilterReq == chart2)
+            {
+                CreateAmplitudeChart(storedData[0], chart1);
+                if (isTriangleWindow) 
+                {
+                    double[] windowedSamples = ApplyTriangleWindow(selectedSamples);
+                    CreateFreqChart(windowedSamples, N, chart2);
+                } else
+                {
+                    CreateFreqChart(selectedSamples, N, chart2);    
+                }
+                
+            }
+            else
+            {
+                CreateAmplitudeChart(storedData[1], chart3);
+                CreateFreqChart(selectedSamples, N, chart4);
+            }
+
+        }
+
+        private void FreqChart_SelectionRangeChanging(object sender, CursorEventArgs e)
+        {
+            // Clear the previously selected data points
+            fEndX = 0;
+        }
+
+        private void FreqChart_SelectionRangeChanged(object sender, CursorEventArgs e)
+        {
+            Chart chart = (Chart)sender;
+            sentFilterReq = chart;
+            ChartArea chartArea = chart.ChartAreas["ChartArea1"];
+            Series series = chart.Series[0];
+
+            // Determine the X-values of the selection range
+            double fStartX = chartArea.CursorX.SelectionStart;
+            fEndX = chartArea.CursorX.SelectionEnd;
+
+            
+
+            if (fStartX > fEndX)
+            {
+                double temp = fStartX;
+                fStartX = fEndX;
+                fEndX = temp;
+
+            }
+
+            
+        }
+
+        
+
+        private double[] createFilter(double fbin, int sizeOfFilter)
+        {
+            double[] filter = new double[sizeOfFilter]; 
+            for(int i = 0; i < sizeOfFilter; ++i)
+            {
+                if(i <= fbin || i > (sizeOfFilter - fbin))
+                filter[i] = 1;
+                else filter[i] = 0;
+            }
+            return filter;
+        }
+
+        private void WindowOnToggle_Click(object sender, EventArgs e)
+        {
+            if (!isTriangleWindow)
+            {
+                this.WindowOnToggle.Text = "Off";
+                isTriangleWindow = true;
+            }
+            else
+            {
+                this.WindowOnToggle.Text = "On";
+                isTriangleWindow = true;
+            }
+            
+        }
+
+        private double[] InvDFT(double[] A, int N)
+        {
+
+            double real;
+            double imag;
+            int n = A.Length;
+            double[] s = new double[n];
+
+            for (int t = 0; t < n; t++)
+            {
+                real = 0;
+                for (int f = 0; f < n; f++)
+                {
+                    real += (A[f] * Math.Cos(2 * Math.PI * t * f * (N / n) / N)) / N;
+                }
+                s[t] = real;
+            }
+            return s;
+        }
+
+        private double[] convolution(double[]s, double[] filter)
+        {
+            double[] newSamples = new double[s.Length];
+            for(int t = 0; t < s.Length;t++)
+            {
+                newSamples[t] = 0;
+                for ( int i = 0; i < filter.Length; i++)
+                {
+                    
+                    if(t+i < s.Length)
+                    {
+                        newSamples[t] += (s[t + i] * filter[i]);
+                    }
+                    else
+                    {
+                        int circularIndex = (t + i) - s.Length;
+                        newSamples[t] += s[circularIndex] * filter[i];
+                        
+                    }
+                    
+                }
+            }
+            return newSamples;
+        }
+
+        static double[] ApplyTriangleWindow(double[] samples)
+        {
+            int N = samples.Length;
+            double[] windowedSamples = new double[N];
+
+            for (int n = 0; n < N; n++)
+            {
+                double value = samples[n] * (1.0 - Math.Abs((n - (N / 2.0)) / (N / 2.0)));
+                windowedSamples[n] = value;
+            }
+
+            return windowedSamples;
+        }
+
+
+
+
 
     }
 }

@@ -78,12 +78,14 @@ namespace Project
             this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pasteToChart1 = new System.Windows.Forms.ToolStripMenuItem();
             this.pasteToChart2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.windowingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.triangleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.WindowOnToggle = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.recordBtn = new System.Windows.Forms.Button();
             this.playBtn = new System.Windows.Forms.Button();
             this.pauseBtn = new System.Windows.Forms.Button();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.filter = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.statusStripSampleSizeLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStripSampleRateLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -110,8 +112,8 @@ namespace Project
             this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
             legend1.Name = "Legend1";
             this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(4, 5);
-            this.chart1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.chart1.Location = new System.Drawing.Point(3, 4);
+            this.chart1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chart1.Name = "chart1";
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
@@ -119,7 +121,7 @@ namespace Project
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(1560, 317);
+            this.chart1.Size = new System.Drawing.Size(1174, 257);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
             // 
@@ -130,8 +132,8 @@ namespace Project
             this.chart2.Dock = System.Windows.Forms.DockStyle.Fill;
             legend2.Name = "Legend1";
             this.chart2.Legends.Add(legend2);
-            this.chart2.Location = new System.Drawing.Point(4, 5);
-            this.chart2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.chart2.Location = new System.Drawing.Point(3, 4);
+            this.chart2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chart2.Name = "chart2";
             this.chart2.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Grayscale;
             series2.ChartArea = "ChartArea1";
@@ -139,7 +141,7 @@ namespace Project
             series2.Legend = "Legend1";
             series2.Name = "Sound Wave";
             this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(773, 311);
+            this.chart2.Size = new System.Drawing.Size(582, 253);
             this.chart2.TabIndex = 1;
             this.chart2.Text = "chart2";
             // 
@@ -150,8 +152,8 @@ namespace Project
             this.chart3.Dock = System.Windows.Forms.DockStyle.Fill;
             legend3.Name = "Legend1";
             this.chart3.Legends.Add(legend3);
-            this.chart3.Location = new System.Drawing.Point(4, 656);
-            this.chart3.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.chart3.Location = new System.Drawing.Point(3, 532);
+            this.chart3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.chart3.Name = "chart3";
             series3.ChartArea = "ChartArea1";
             series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
@@ -159,17 +161,17 @@ namespace Project
             series3.Legend = "Legend1";
             series3.Name = "Series1";
             this.chart3.Series.Add(series3);
-            this.chart3.Size = new System.Drawing.Size(1560, 325);
+            this.chart3.Size = new System.Drawing.Size(1174, 261);
             this.chart3.TabIndex = 3;
             this.chart3.Text = "chart3";
             // 
             // Start
             // 
             this.Start.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Start.Location = new System.Drawing.Point(4, 2);
-            this.Start.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.Start.Location = new System.Drawing.Point(3, 2);
+            this.Start.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Start.Name = "Start";
-            this.Start.Size = new System.Drawing.Size(160, 40);
+            this.Start.Size = new System.Drawing.Size(120, 32);
             this.Start.TabIndex = 4;
             this.Start.Text = "Start";
             this.Start.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -183,14 +185,14 @@ namespace Project
             this.chart4.Dock = System.Windows.Forms.DockStyle.Fill;
             legend4.Name = "Legend1";
             this.chart4.Legends.Add(legend4);
-            this.chart4.Location = new System.Drawing.Point(785, 5);
-            this.chart4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.chart4.Location = new System.Drawing.Point(591, 4);
+            this.chart4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chart4.Name = "chart4";
             series4.ChartArea = "ChartArea1";
             series4.Legend = "Legend1";
             series4.Name = "Series1";
             this.chart4.Series.Add(series4);
-            this.chart4.Size = new System.Drawing.Size(773, 311);
+            this.chart4.Size = new System.Drawing.Size(582, 253);
             this.chart4.TabIndex = 7;
             this.chart4.Text = "chart4";
             // 
@@ -205,10 +207,12 @@ namespace Project
             this.analyseToolStripMenuItem,
             this.cutToolStripMenuItem,
             this.copyToolStripMenuItem,
-            this.pasteToolStripMenuItem});
+            this.pasteToolStripMenuItem,
+            this.windowingToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1574, 40);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(1184, 36);
             this.menuStrip1.TabIndex = 12;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -218,20 +222,20 @@ namespace Project
             this.newWindowBtn,
             this.exitBtn});
             this.waveAnalyzerToolStripMenuItem.Name = "waveAnalyzerToolStripMenuItem";
-            this.waveAnalyzerToolStripMenuItem.Size = new System.Drawing.Size(183, 36);
+            this.waveAnalyzerToolStripMenuItem.Size = new System.Drawing.Size(138, 32);
             this.waveAnalyzerToolStripMenuItem.Text = "WaveAnalyzer";
             // 
             // newWindowBtn
             // 
             this.newWindowBtn.Name = "newWindowBtn";
-            this.newWindowBtn.Size = new System.Drawing.Size(289, 44);
+            this.newWindowBtn.Size = new System.Drawing.Size(220, 34);
             this.newWindowBtn.Text = "New Window";
             this.newWindowBtn.Click += new System.EventHandler(this.newWindowBtn_Click);
             // 
             // exitBtn
             // 
             this.exitBtn.Name = "exitBtn";
-            this.exitBtn.Size = new System.Drawing.Size(289, 44);
+            this.exitBtn.Size = new System.Drawing.Size(220, 34);
             this.exitBtn.Text = "Exit";
             this.exitBtn.Click += new System.EventHandler(this.exitBtn_Click);
             // 
@@ -241,20 +245,20 @@ namespace Project
             this.openFileBtn,
             this.saveFileBtn});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(71, 36);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(54, 32);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openFileBtn
             // 
             this.openFileBtn.Name = "openFileBtn";
-            this.openFileBtn.Size = new System.Drawing.Size(206, 44);
+            this.openFileBtn.Size = new System.Drawing.Size(158, 34);
             this.openFileBtn.Text = "Open";
             this.openFileBtn.Click += new System.EventHandler(this.openFileBtn_Click);
             // 
             // saveFileBtn
             // 
             this.saveFileBtn.Name = "saveFileBtn";
-            this.saveFileBtn.Size = new System.Drawing.Size(206, 44);
+            this.saveFileBtn.Size = new System.Drawing.Size(158, 34);
             this.saveFileBtn.Text = "Save";
             this.saveFileBtn.Click += new System.EventHandler(this.saveFileBtn_Click);
             // 
@@ -264,7 +268,7 @@ namespace Project
             this.sampleSizeMenu,
             this.sampleRateMenu});
             this.recordToolStripMenuItem.Name = "recordToolStripMenuItem";
-            this.recordToolStripMenuItem.Size = new System.Drawing.Size(128, 36);
+            this.recordToolStripMenuItem.Size = new System.Drawing.Size(98, 32);
             this.recordToolStripMenuItem.Text = "Recorder";
             // 
             // sampleSizeMenu
@@ -273,20 +277,20 @@ namespace Project
             this.sampleSize8bitBtn,
             this.sampleSize16bitBtn});
             this.sampleSizeMenu.Name = "sampleSizeMenu";
-            this.sampleSizeMenu.Size = new System.Drawing.Size(280, 44);
+            this.sampleSizeMenu.Size = new System.Drawing.Size(213, 34);
             this.sampleSizeMenu.Text = "Sample Size";
             // 
             // sampleSize8bitBtn
             // 
             this.sampleSize8bitBtn.Name = "sampleSize8bitBtn";
-            this.sampleSize8bitBtn.Size = new System.Drawing.Size(211, 44);
+            this.sampleSize8bitBtn.Size = new System.Drawing.Size(162, 34);
             this.sampleSize8bitBtn.Text = "8-bit";
             this.sampleSize8bitBtn.Click += new System.EventHandler(this.SetSampleSize);
             // 
             // sampleSize16bitBtn
             // 
             this.sampleSize16bitBtn.Name = "sampleSize16bitBtn";
-            this.sampleSize16bitBtn.Size = new System.Drawing.Size(211, 44);
+            this.sampleSize16bitBtn.Size = new System.Drawing.Size(162, 34);
             this.sampleSize16bitBtn.Text = "16-bit";
             this.sampleSize16bitBtn.Click += new System.EventHandler(this.SetSampleSize);
             // 
@@ -297,14 +301,14 @@ namespace Project
             this.sampleRate22050Btn,
             this.sampleRate44100Btn});
             this.sampleRateMenu.Name = "sampleRateMenu";
-            this.sampleRateMenu.Size = new System.Drawing.Size(280, 44);
+            this.sampleRateMenu.Size = new System.Drawing.Size(213, 34);
             this.sampleRateMenu.Text = "Sample Rate";
             // 
             // sampleRate11025Btn
             // 
             this.sampleRate11025Btn.CheckOnClick = true;
             this.sampleRate11025Btn.Name = "sampleRate11025Btn";
-            this.sampleRate11025Btn.Size = new System.Drawing.Size(254, 44);
+            this.sampleRate11025Btn.Size = new System.Drawing.Size(195, 34);
             this.sampleRate11025Btn.Text = "11025KHz";
             this.sampleRate11025Btn.Click += new System.EventHandler(this.SetSampleRate);
             // 
@@ -312,7 +316,7 @@ namespace Project
             // 
             this.sampleRate22050Btn.CheckOnClick = true;
             this.sampleRate22050Btn.Name = "sampleRate22050Btn";
-            this.sampleRate22050Btn.Size = new System.Drawing.Size(254, 44);
+            this.sampleRate22050Btn.Size = new System.Drawing.Size(195, 34);
             this.sampleRate22050Btn.Text = "22050KHz";
             this.sampleRate22050Btn.Click += new System.EventHandler(this.SetSampleRate);
             // 
@@ -320,7 +324,7 @@ namespace Project
             // 
             this.sampleRate44100Btn.CheckOnClick = true;
             this.sampleRate44100Btn.Name = "sampleRate44100Btn";
-            this.sampleRate44100Btn.Size = new System.Drawing.Size(254, 44);
+            this.sampleRate44100Btn.Size = new System.Drawing.Size(195, 34);
             this.sampleRate44100Btn.Text = "44100KHz";
             this.sampleRate44100Btn.Click += new System.EventHandler(this.SetSampleRate);
             // 
@@ -329,7 +333,7 @@ namespace Project
             this.analyseToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.analyseToolStripMenuItem1});
             this.analyseToolStripMenuItem.Name = "analyseToolStripMenuItem";
-            this.analyseToolStripMenuItem.Size = new System.Drawing.Size(116, 36);
+            this.analyseToolStripMenuItem.Size = new System.Drawing.Size(89, 32);
             this.analyseToolStripMenuItem.Text = "Analyse";
             // 
             // analyseToolStripMenuItem1
@@ -338,14 +342,14 @@ namespace Project
             this.channel1AnalyzeBtn,
             this.channel2AnalyzeBtn});
             this.analyseToolStripMenuItem1.Name = "analyseToolStripMenuItem1";
-            this.analyseToolStripMenuItem1.Size = new System.Drawing.Size(189, 44);
+            this.analyseToolStripMenuItem1.Size = new System.Drawing.Size(145, 34);
             this.analyseToolStripMenuItem1.Text = "DFT";
             // 
             // channel1AnalyzeBtn
             // 
             this.channel1AnalyzeBtn.Enabled = false;
             this.channel1AnalyzeBtn.Name = "channel1AnalyzeBtn";
-            this.channel1AnalyzeBtn.Size = new System.Drawing.Size(255, 44);
+            this.channel1AnalyzeBtn.Size = new System.Drawing.Size(192, 34);
             this.channel1AnalyzeBtn.Text = "Channel 1";
             this.channel1AnalyzeBtn.Click += new System.EventHandler(this.channel1AnalyzeBtn_Click);
             // 
@@ -353,7 +357,7 @@ namespace Project
             // 
             this.channel2AnalyzeBtn.Enabled = false;
             this.channel2AnalyzeBtn.Name = "channel2AnalyzeBtn";
-            this.channel2AnalyzeBtn.Size = new System.Drawing.Size(255, 44);
+            this.channel2AnalyzeBtn.Size = new System.Drawing.Size(192, 34);
             this.channel2AnalyzeBtn.Text = "Channel 2";
             this.channel2AnalyzeBtn.Click += new System.EventHandler(this.channel2AnalyzeBtn_Click);
             // 
@@ -363,7 +367,7 @@ namespace Project
             this.chart1ToolStripMenuItem,
             this.chart2ToolStripMenuItem});
             this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
-            this.cutToolStripMenuItem.Size = new System.Drawing.Size(55, 29);
+            this.cutToolStripMenuItem.Size = new System.Drawing.Size(55, 32);
             this.cutToolStripMenuItem.Text = "Cut";
             // 
             // chart1ToolStripMenuItem
@@ -383,7 +387,7 @@ namespace Project
             // copyToolStripMenuItem
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(70, 29);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(70, 32);
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
@@ -393,39 +397,45 @@ namespace Project
             this.pasteToChart1,
             this.pasteToChart2});
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(89, 36);
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(69, 32);
             this.pasteToolStripMenuItem.Text = "Paste";
             // 
             // pasteToChart1
             // 
             this.pasteToChart1.Name = "pasteToChart1";
-            this.pasteToChart1.Size = new System.Drawing.Size(224, 44);
+            this.pasteToChart1.Size = new System.Drawing.Size(171, 34);
             this.pasteToChart1.Text = "Chart 1";
             this.pasteToChart1.Click += new System.EventHandler(this.pasteToChart1_Click);
             // 
             // pasteToChart2
             // 
             this.pasteToChart2.Name = "pasteToChart2";
-            this.pasteToChart2.Size = new System.Drawing.Size(224, 44);
+            this.pasteToChart2.Size = new System.Drawing.Size(171, 34);
             this.pasteToChart2.Text = "Chart 2";
             this.pasteToChart2.Click += new System.EventHandler(this.pasteToChart2_Click_1);
             // 
-            // tableLayoutPanel1
+            // windowingToolStripMenuItem
             // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 15F));
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 33);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1517, 1049);
-            this.tableLayoutPanel1.TabIndex = 13;
+            this.windowingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.triangleToolStripMenuItem});
+            this.windowingToolStripMenuItem.Name = "windowingToolStripMenuItem";
+            this.windowingToolStripMenuItem.Size = new System.Drawing.Size(119, 32);
+            this.windowingToolStripMenuItem.Text = "Windowing";
+            // 
+            // triangleToolStripMenuItem
+            // 
+            this.triangleToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.WindowOnToggle});
+            this.triangleToolStripMenuItem.Name = "triangleToolStripMenuItem";
+            this.triangleToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.triangleToolStripMenuItem.Text = "Triangle";
+            // 
+            // WindowOnToggle
+            // 
+            this.WindowOnToggle.Name = "WindowOnToggle";
+            this.WindowOnToggle.Size = new System.Drawing.Size(270, 34);
+            this.WindowOnToggle.Text = "On";
+            this.WindowOnToggle.Click += new System.EventHandler(this.WindowOnToggle_Click);
             // 
             // flowLayoutPanel1
             // 
@@ -433,19 +443,21 @@ namespace Project
             this.flowLayoutPanel1.Controls.Add(this.recordBtn);
             this.flowLayoutPanel1.Controls.Add(this.playBtn);
             this.flowLayoutPanel1.Controls.Add(this.pauseBtn);
+            this.flowLayoutPanel1.Controls.Add(this.filter);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(2, 2);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(1513, 36);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(1180, 36);
             this.flowLayoutPanel1.TabIndex = 1;
             // 
             // recordBtn
             // 
             this.recordBtn.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.recordBtn.Location = new System.Drawing.Point(171, 3);
+            this.recordBtn.Location = new System.Drawing.Point(128, 2);
+            this.recordBtn.Margin = new System.Windows.Forms.Padding(2);
             this.recordBtn.Name = "recordBtn";
-            this.recordBtn.Size = new System.Drawing.Size(160, 40);
+            this.recordBtn.Size = new System.Drawing.Size(120, 32);
             this.recordBtn.TabIndex = 5;
             this.recordBtn.Text = "Record";
             this.recordBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -455,9 +467,10 @@ namespace Project
             // playBtn
             // 
             this.playBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.playBtn.Location = new System.Drawing.Point(337, 3);
+            this.playBtn.Location = new System.Drawing.Point(252, 2);
+            this.playBtn.Margin = new System.Windows.Forms.Padding(2);
             this.playBtn.Name = "playBtn";
-            this.playBtn.Size = new System.Drawing.Size(160, 40);
+            this.playBtn.Size = new System.Drawing.Size(120, 32);
             this.playBtn.TabIndex = 6;
             this.playBtn.Text = "Play";
             this.playBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -466,26 +479,25 @@ namespace Project
             // 
             // pauseBtn
             // 
-            this.pauseBtn.Location = new System.Drawing.Point(503, 3);
+            this.pauseBtn.Location = new System.Drawing.Point(376, 2);
+            this.pauseBtn.Margin = new System.Windows.Forms.Padding(2);
             this.pauseBtn.Name = "pauseBtn";
-            this.pauseBtn.Size = new System.Drawing.Size(160, 40);
+            this.pauseBtn.Size = new System.Drawing.Size(120, 32);
             this.pauseBtn.TabIndex = 7;
             this.pauseBtn.Text = "Pause";
             this.pauseBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.pauseBtn.UseVisualStyleBackColor = true;
             this.pauseBtn.Click += new System.EventHandler(this.pauseBtn_Click);
             // 
-            // flowLayoutPanel1
+            // filter
             // 
-            this.flowLayoutPanel1.Controls.Add(this.Start);
-            this.flowLayoutPanel1.Controls.Add(this.recordBtn);
-            this.flowLayoutPanel1.Controls.Add(this.playBtn);
-            this.flowLayoutPanel1.Controls.Add(this.pauseBtn);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(1568, 44);
-            this.flowLayoutPanel1.TabIndex = 1;
+            this.filter.Location = new System.Drawing.Point(501, 3);
+            this.filter.Name = "filter";
+            this.filter.Size = new System.Drawing.Size(105, 31);
+            this.filter.TabIndex = 8;
+            this.filter.Text = "Filter";
+            this.filter.UseVisualStyleBackColor = true;
+            this.filter.Click += new System.EventHandler(this.filter_Click);
             // 
             // statusStrip1
             // 
@@ -495,65 +507,68 @@ namespace Project
             this.statusStripSampleSizeLabel,
             this.statusStripSampleRateLabel,
             this.statusStripChannels});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 1039);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 839);
             this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(10, 0, 1, 0);
             this.statusStrip1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.statusStrip1.Size = new System.Drawing.Size(1574, 50);
+            this.statusStrip1.Size = new System.Drawing.Size(1184, 40);
             this.statusStrip1.TabIndex = 14;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // statusStripSampleSizeLabel
             // 
             this.statusStripSampleSizeLabel.Name = "statusStripSampleSizeLabel";
-            this.statusStripSampleSizeLabel.Size = new System.Drawing.Size(206, 40);
+            this.statusStripSampleSizeLabel.Size = new System.Drawing.Size(154, 33);
             this.statusStripSampleSizeLabel.Text = "Sample Size: 0-bit";
             // 
             // statusStripSampleRateLabel
             // 
             this.statusStripSampleRateLabel.Name = "statusStripSampleRateLabel";
-            this.statusStripSampleRateLabel.Size = new System.Drawing.Size(200, 40);
+            this.statusStripSampleRateLabel.Size = new System.Drawing.Size(151, 33);
             this.statusStripSampleRateLabel.Text = "Sample Rate: 0Hz";
             // 
             // statusStripChannels
             // 
             this.statusStripChannels.Name = "statusStripChannels";
-            this.statusStripChannels.Size = new System.Drawing.Size(137, 40);
+            this.statusStripChannels.Size = new System.Drawing.Size(102, 33);
             this.statusStripChannels.Text = "Channels: 0";
             // 
             // tableLayoutPanel4
             // 
             this.tableLayoutPanel4.ColumnCount = 1;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 15F));
             this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel5, 0, 1);
             this.tableLayoutPanel4.Controls.Add(this.statusStrip1, 0, 2);
             this.tableLayoutPanel4.Controls.Add(this.flowLayoutPanel1, 0, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 40);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 36);
+            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 3;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(1574, 1089);
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(1184, 879);
             this.tableLayoutPanel4.TabIndex = 15;
             // 
             // tableLayoutPanel5
             // 
             this.tableLayoutPanel5.ColumnCount = 1;
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 15F));
             this.tableLayoutPanel5.Controls.Add(this.chart1, 0, 0);
             this.tableLayoutPanel5.Controls.Add(this.tableLayoutPanel6, 0, 1);
             this.tableLayoutPanel5.Controls.Add(this.chart3, 0, 2);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 53);
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(2, 42);
+            this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 3;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(1568, 983);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(1180, 795);
             this.tableLayoutPanel5.TabIndex = 0;
             // 
             // tableLayoutPanel6
@@ -564,25 +579,26 @@ namespace Project
             this.tableLayoutPanel6.Controls.Add(this.chart4, 1, 0);
             this.tableLayoutPanel6.Controls.Add(this.chart2, 0, 0);
             this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 330);
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(2, 267);
+            this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.RowCount = 1;
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(1562, 321);
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(1176, 261);
             this.tableLayoutPanel6.TabIndex = 0;
             // 
             // WaveAnalyzer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(1574, 1129);
+            this.ClientSize = new System.Drawing.Size(1184, 915);
             this.Controls.Add(this.tableLayoutPanel4);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.MinimumSize = new System.Drawing.Size(1600, 1200);
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MinimumSize = new System.Drawing.Size(1206, 971);
             this.Name = "WaveAnalyzer";
             this.Text = "WaveAnalyzer";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -674,7 +690,8 @@ namespace Project
                 chartArea1.AxisX.ScaleView.Zoomable = false;
                 chartArea1.AxisY.ScaleView.Zoomable = false;
                 chartArea1.CursorX.IsUserSelectionEnabled = true;
-
+                chart.SelectionRangeChanging += FreqChart_SelectionRangeChanging;
+                chart.SelectionRangeChanged += FreqChart_SelectionRangeChanged;
                 chart.Series[0].Color = Color.Blue;
             }
         }
@@ -730,10 +747,13 @@ namespace Project
         private ToolStripMenuItem pasteToolStripMenuItem;
         private ToolStripMenuItem pasteToChart1;
         private ToolStripMenuItem pasteToChart2;
-        private ToolStripMenuItem copyToolStripMenuItem;
         private ToolStripMenuItem cutToolStripMenuItem;
         private ToolStripMenuItem chart1ToolStripMenuItem;
         private ToolStripMenuItem chart2ToolStripMenuItem;
+        private Button filter;
+        private ToolStripMenuItem windowingToolStripMenuItem;
+        private ToolStripMenuItem triangleToolStripMenuItem;
+        private ToolStripMenuItem WindowOnToggle;
     }
 
     
