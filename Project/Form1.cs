@@ -35,17 +35,28 @@ namespace Project
         static double[][] storedData;
         const double MaxValue16Bit = 32767.0;
         double[] selectedSamples;
+        private List<DataPoint> selectedDataPoints = new List<DataPoint>();
+
+        //Recorder settings
+        bool recordingStatus = false;
+        bool playStatus = false;
+        int sampleSize = 8;
+        int sampleRate = 11025;
+
+        //Default menustrip selection flags
+        bool sampleSizeFlag8 = true, sampleSizeFlag16 = false;
+        bool sampleRateFlag11025 = true, sampleRateFlag22050 = false, sampleRateFlag44100 = false;
+
         double startX = 0.0;
         double endX = 0;
 
         bool channel1AnalyzeBtnEnabled = false;
         bool channel2AnalyzeBtnEnabled = false;
-        bool recordingStatus = false;
-        bool playStatus = false;
 
         public WaveAnalyzer()
         {
             InitializeComponent();
+            InitRecorder();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -55,15 +66,12 @@ namespace Project
             chart3.Visible = false;
             chart4.Visible = false;
             chart4.Series[0].Color = Color.Red;
-
-            InitRecorder();
         }
 
 
         private void CreateAmplitudeChart(double[] s, Chart chart)
         {
             chart.Series[0].Points.Clear();
-            
             for (int t = 0; t <s.Length; t++)
             {
 
@@ -97,7 +105,12 @@ namespace Project
             chart2.Series[0].Points.AddXY (0 , 0);
             chart4.Series[0].Points.AddXY(0, 0);
 
-
+            //Menustrip default selections
+            this.sampleSize8bitBtn.Checked = sampleSizeFlag8;
+            this.sampleSize16bitBtn.Checked = sampleSizeFlag16;
+            this.sampleRate11025Btn.Checked = sampleRateFlag11025;
+            this.sampleRate22050Btn.Checked = sampleRateFlag22050;
+            this.sampleRate44100Btn.Checked = sampleRateFlag44100;
         }
 
         private double[] calculateSamples(int f, int N)
@@ -262,7 +275,7 @@ namespace Project
                         s[0][i] = audio16[i] / MaxValue16Bit;
                         chart1.Series[0].Points.AddXY(i, s[0][i]);
                     }
-                    
+
                     /*CreateFreqChart(s[0], N, chart2);*/
                     
                 } else if(channel == 2) 
@@ -281,6 +294,8 @@ namespace Project
 
                 }
                 storedData = s;
+                setOpenedFileData(audio16);
+                setStatusStrip();
             }
             
            
@@ -521,53 +536,78 @@ namespace Project
          * Recorder
          */
 
-        [DllImport("..\\..\\..\\Recorder_DLL\\recorder_dll.dll", CharSet = CharSet.Auto)]
+        [DllImport("..\\..\\..\\Recorder_DLL\\recorder_dll.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool InitRecorder();
-
-        [DllImport("..\\..\\..\\Recorder_DLL\\recorder_dll.dll", CharSet = CharSet.Auto)]
+        [DllImport("..\\..\\..\\Recorder_DLL\\recorder_dll.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
         public static extern void StartRec();
-
-        [DllImport("..\\..\\..\\Recorder_DLL\\recorder_dll.dll", CharSet = CharSet.Auto)]
+        [DllImport("..\\..\\..\\Recorder_DLL\\recorder_dll.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
         public static extern RecordData StopRec();
-
-        [DllImport("..\\..\\..\\Recorder_DLL\\recorder_dll.dll", CharSet = CharSet.Auto)]
+        [DllImport("..\\..\\..\\Recorder_DLL\\recorder_dll.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
         public static extern void PlayRec();
-        [DllImport("..\\..\\..\\Recorder_DLL\\recorder_dll.dll", CharSet = CharSet.Auto)]
+        [DllImport("..\\..\\..\\Recorder_DLL\\recorder_dll.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
         public static extern void PauseRec();
-        [DllImport("..\\..\\..\\Recorder_DLL\\recorder_dll.dll", CharSet = CharSet.Auto)]
-        public static extern RecordData GetData();
+        [DllImport("..\\..\\..\\Recorder_DLL\\recorder_dll.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void SetData(RecordData data);
+        [DllImport("..\\..\\..\\Recorder_DLL\\recorder_dll.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void SetRecorderSpecs(int sampleSize, int sampleRate, int channels);
+        
 
 
         private void recordBtn_Click(object sender, EventArgs e)
         {
             if (recordingStatus)
             {
-                RecordData data = StopRec();
+                RecordData record = StopRec();
                 recordingStatus = false;
                 recordBtn.Text = "Start";
-                N = 22050;
+
+                N = sampleRate;
+                bitsPerSample = sampleSize;
+                channel = 1;
+
                 //Display sound wave
                 ClearChart();
                 unsafe
                 {
-                    if (data.data != IntPtr.Zero && data.dataLength != 0)
+                    if (record.data != IntPtr.Zero && record.dataLength != 0)
                     {
-                        
-                        for (int i = 0; i < data.dataLength; i++)
+                        byte* buffer = (byte*)record.data;
+                        byte[] b = new byte[record.dataLength];
+                        b[0] = (byte)buffer;
+                        byte[] audio16 = new byte[record.dataLength];
+                        for (int i = 0; i < record.dataLength; i++)
                         {
-                            byte* buffer = (byte*)data.data;
-                            chart1.Series[0].Points.AddXY(i, buffer[i]);
-                            
+                            audio16[i] = (byte)buffer[i];
+                        }
+                        short[] s = Convert8BitTo16Bit(audio16);
+                        for (int i = 0; i < s.Length; i++)
+                        {
+                            chart1.Series[0].Points.AddXY(i, s[i] / MaxValue16Bit);
                         }
                     }
+
                 }
+                setStatusStrip();
             }
             else
-            {
+            {   
+                SetRecorderSpecs(sampleSize, sampleRate, 1);
                 StartRec();
                 recordingStatus = true;
                 recordBtn.Text = "Stop";
             }
+        }
+
+        unsafe private void setOpenedFileData(short[] samples)
+        {
+            RecordData recordData = new RecordData();
+            byte[] b = samples.SelectMany(x => BitConverter.GetBytes(x)).ToArray();
+            IntPtr iptr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(byte)) * b.Length);
+            Marshal.Copy(b, 0, iptr, b.Length);
+            recordData.data = iptr;
+            recordData.dataLength = (uint)b.Length;
+            SetRecorderSpecs(bitsPerSample, N, channel);
+            SetData(recordData);
         }
 
         private void playBtn_Click(object sender, EventArgs e)
@@ -680,5 +720,62 @@ namespace Project
                 //  
             }
         }
+
+        private void exitBtn_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void SetSampleSize(object sender, EventArgs e)
+        {
+            
+            if (sender.Equals(sampleSize8bitBtn))
+            {
+                sampleSizeFlag8 = true;
+                sampleSizeFlag16 = false;
+                sampleSize = 8;
+            } else if (sender.Equals(sampleSize16bitBtn))
+            {
+                sampleSizeFlag8 = false;
+                sampleSizeFlag16 = true;
+                sampleSize = 16;
+            }
+            this.sampleSize8bitBtn.Checked = sampleSizeFlag8;
+            this.sampleSize16bitBtn.Checked = sampleSizeFlag16;
+        }
+
+        private void SetSampleRate(object sender, EventArgs e)
+        {
+            if (sender.Equals(sampleRate11025Btn))
+            {
+                sampleRateFlag11025 = true;
+                sampleRateFlag22050 = false;
+                sampleRateFlag44100 = false;
+                sampleRate = 11025;
+            } else if (sender.Equals(sampleRate22050Btn))
+            {
+                sampleRateFlag11025 = false;
+                sampleRateFlag22050 = true;
+                sampleRateFlag44100 = false;
+                sampleRate = 22050;
+            } else if (sender.Equals(sampleRate44100Btn))
+            {
+                sampleRateFlag11025 = false;
+                sampleRateFlag22050 = false;
+                sampleRateFlag44100 = true;
+                sampleRate = 44100;
+            }
+            this.sampleRate11025Btn.Checked = sampleRateFlag11025;
+            this.sampleRate22050Btn.Checked = sampleRateFlag22050;
+            this.sampleRate44100Btn.Checked = sampleRateFlag44100;
+        }
+
+        private void setStatusStrip()
+        {
+            this.statusStripSampleRateLabel.Text = "Sample Rate: " + N.ToString() + "Hz";
+            this.statusStripSampleSizeLabel.Text = "Sample Size: " + bitsPerSample.ToString() + "-bit";
+            this.statusStripChannels.Text = "Channels: " + channel.ToString();
+        }
+
     }
 }
