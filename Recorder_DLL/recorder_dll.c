@@ -82,9 +82,10 @@ __declspec (dllexport) VOID SetRecorderSpecs(int sampleSize, int sampleRate, int
     waveform.wFormatTag = WAVE_FORMAT_PCM;
     waveform.nChannels = channels;
     waveform.nSamplesPerSec = sampleRate;
-    waveform.nAvgBytesPerSec = sampleRate;
+
     waveform.nBlockAlign = (sampleSize / 8) * channels;
     waveform.wBitsPerSample = sampleSize;
+    waveform.nAvgBytesPerSec = sampleRate / 8;
     waveform.cbSize = 0;
 }
 

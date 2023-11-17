@@ -306,7 +306,6 @@ namespace Project
 
                 }
                 storedData = s;
-                setOpenedFileData(audio16);
                 setStatusStrip();
             }
             
@@ -606,18 +605,35 @@ namespace Project
                 {
                     if (record.data != IntPtr.Zero && record.dataLength != 0)
                     {
+                        //Initialize variables
                         byte* buffer = (byte*)record.data;
-                        byte[] b = new byte[record.dataLength];
-                        b[0] = (byte)buffer;
-                        byte[] audio16 = new byte[record.dataLength];
+                        byte[] byteData = new byte[record.dataLength];
+                        short[] audio16 = new short[record.dataLength];
+                        storedData = new double[2][];
+                        storedData[0] = new double[record.dataLength];
+
+                        //Get data in byte
                         for (int i = 0; i < record.dataLength; i++)
                         {
-                            audio16[i] = (byte)buffer[i];
+                            byteData[i] = (byte)buffer[i];
                         }
-                        short[] s = Convert8BitTo16Bit(audio16);
-                        for (int i = 0; i < s.Length; i++)
+
+                        //Convert data to 16-bit
+                        if (sampleSize == 8)
                         {
-                            chart1.Series[0].Points.AddXY(i, s[i] / MaxValue16Bit);
+                            audio16 = Convert8BitTo16Bit(byteData);
+                        } else if (sampleSize == 16)
+                        {
+                            storedData[0] = new double[byteData.Length / 2];
+                            audio16 = new short[byteData.Length / 2];
+                            Buffer.BlockCopy(byteData, 0, audio16, 0, byteData.Length);
+                        }
+
+                        //Plot the graph
+                        for (int i = 0; i < audio16.Length; i++)
+                        {
+                            storedData[0][i] = audio16[i] / MaxValue16Bit;
+                            chart1.Series[0].Points.AddXY(i, storedData[0][i]);
                         }
                     }
 
@@ -633,7 +649,7 @@ namespace Project
             }
         }
 
-        unsafe private void setOpenedFileData(short[] samples)
+        unsafe private void setPlayData(short[] samples)
         {
             RecordData recordData = new RecordData();
             byte[] b = samples.SelectMany(x => BitConverter.GetBytes(x)).ToArray();
@@ -641,12 +657,37 @@ namespace Project
             Marshal.Copy(b, 0, iptr, b.Length);
             recordData.data = iptr;
             recordData.dataLength = (uint)b.Length;
-            SetRecorderSpecs(bitsPerSample, N, channel);
             SetData(recordData);
+        }
+
+        private short[] convertStoredDataToShort()
+        {
+            if (channel == 1)
+            {
+                short[] shortSamples = new short[storedData[0].Length];
+                for (int i = 0; i < storedData[0].Length; i++)
+                {
+                    shortSamples[i] = (short)(storedData[0][i] * MaxValue16Bit);
+                }
+                return shortSamples;
+            }
+            else
+            {
+                int size = 2 * storedData[0].Length - 2;
+                short[] shortSamples = new short[size];
+                for (int i = 0; i < storedData[0].Length; i+=2)
+                {
+                    shortSamples[i] = (short)(storedData[0][i] * MaxValue16Bit);
+                    shortSamples[i+1] = (short)(storedData[1][i] * MaxValue16Bit);
+                }
+                return shortSamples;
+            }
         }
 
         private void playBtn_Click(object sender, EventArgs e)
         {
+            setPlayData(convertStoredDataToShort());
+            SetRecorderSpecs(16, N, channel);
             PlayRec();
         }
 
@@ -655,10 +696,68 @@ namespace Project
             PauseRec();
         }
 
+        private void SetSampleSize(object sender, EventArgs e)
+        {
+
+            if (sender.Equals(sampleSize8bitBtn))
+            {
+                sampleSizeFlag8 = true;
+                sampleSizeFlag16 = false;
+                sampleSize = 8;
+            }
+            else if (sender.Equals(sampleSize16bitBtn))
+            {
+                sampleSizeFlag8 = false;
+                sampleSizeFlag16 = true;
+                sampleSize = 16;
+            }
+            this.sampleSize8bitBtn.Checked = sampleSizeFlag8;
+            this.sampleSize16bitBtn.Checked = sampleSizeFlag16;
+        }
+
+        private void SetSampleRate(object sender, EventArgs e)
+        {
+            if (sender.Equals(sampleRate11025Btn))
+            {
+                sampleRateFlag11025 = true;
+                sampleRateFlag22050 = false;
+                sampleRateFlag44100 = false;
+                sampleRate = 11025;
+            }
+            else if (sender.Equals(sampleRate22050Btn))
+            {
+                sampleRateFlag11025 = false;
+                sampleRateFlag22050 = true;
+                sampleRateFlag44100 = false;
+                sampleRate = 22050;
+            }
+            else if (sender.Equals(sampleRate44100Btn))
+            {
+                sampleRateFlag11025 = false;
+                sampleRateFlag22050 = false;
+                sampleRateFlag44100 = true;
+                sampleRate = 44100;
+            }
+            this.sampleRate11025Btn.Checked = sampleRateFlag11025;
+            this.sampleRate22050Btn.Checked = sampleRateFlag22050;
+            this.sampleRate44100Btn.Checked = sampleRateFlag44100;
+        }
+
+        private void setStatusStrip()
+        {
+            this.statusStripSampleRateLabel.Text = "Sample Rate: " + N.ToString() + "Hz";
+            this.statusStripSampleSizeLabel.Text = "Sample Size: " + bitsPerSample.ToString() + "-bit";
+            this.statusStripChannels.Text = "Channels: " + channel.ToString();
+        }
+
+        /*
+         * End of recorder
+         */
+
         private void pasteToChart1_Click(object sender, EventArgs e)
         {
             
-            storedData[0] = pasteToChart(chart1); 
+            storedData[0] = pasteToChart(chart1);
         }
 
 
@@ -759,57 +858,6 @@ namespace Project
         private void exitBtn_Click(object sender, EventArgs e)
         {
             this.Close();
-        }
-
-        private void SetSampleSize(object sender, EventArgs e)
-        {
-            
-            if (sender.Equals(sampleSize8bitBtn))
-            {
-                sampleSizeFlag8 = true;
-                sampleSizeFlag16 = false;
-                sampleSize = 8;
-            } else if (sender.Equals(sampleSize16bitBtn))
-            {
-                sampleSizeFlag8 = false;
-                sampleSizeFlag16 = true;
-                sampleSize = 16;
-            }
-            this.sampleSize8bitBtn.Checked = sampleSizeFlag8;
-            this.sampleSize16bitBtn.Checked = sampleSizeFlag16;
-        }
-
-        private void SetSampleRate(object sender, EventArgs e)
-        {
-            if (sender.Equals(sampleRate11025Btn))
-            {
-                sampleRateFlag11025 = true;
-                sampleRateFlag22050 = false;
-                sampleRateFlag44100 = false;
-                sampleRate = 11025;
-            } else if (sender.Equals(sampleRate22050Btn))
-            {
-                sampleRateFlag11025 = false;
-                sampleRateFlag22050 = true;
-                sampleRateFlag44100 = false;
-                sampleRate = 22050;
-            } else if (sender.Equals(sampleRate44100Btn))
-            {
-                sampleRateFlag11025 = false;
-                sampleRateFlag22050 = false;
-                sampleRateFlag44100 = true;
-                sampleRate = 44100;
-            }
-            this.sampleRate11025Btn.Checked = sampleRateFlag11025;
-            this.sampleRate22050Btn.Checked = sampleRateFlag22050;
-            this.sampleRate44100Btn.Checked = sampleRateFlag44100;
-        }
-
-        private void setStatusStrip()
-        {
-            this.statusStripSampleRateLabel.Text = "Sample Rate: " + N.ToString() + "Hz";
-            this.statusStripSampleSizeLabel.Text = "Sample Size: " + bitsPerSample.ToString() + "-bit";
-            this.statusStripChannels.Text = "Channels: " + channel.ToString();
         }
 
         private void filter_Click(object sender, EventArgs e)
