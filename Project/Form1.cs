@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -37,6 +38,7 @@ namespace Project
         static double[][] storedData;
         const double MaxValue16Bit = 32767.0;
         double[] selectedSamples;
+        bool threading = false;
         private List<DataPoint> selectedDataPoints = new List<DataPoint>();
 
         //Recorder settings
@@ -135,8 +137,29 @@ namespace Project
         private void CreateFreqChart(double[] s, int N, Chart freqChart)
         {
             freqChart.Series[0].Points.Clear();
-            double[] A = DFT(s,N);
-            double maxVal = 0;
+            double[] A;
+
+            //stopwatch to benchmark
+            Stopwatch sw = new Stopwatch();
+
+            //check if user wants threading or not
+            if (!threading)
+            {
+                //threading not enabled
+                sw.Start();
+                A = DFT(s, N);
+                sw.Stop();
+            }
+            else {
+                //threading enabled
+                sw.Start();
+                A = DFTThreading(s, N);
+                sw.Stop();
+            }
+            //display the timer for DFT
+            this.timerDFT.Text = "DFT Timing: " + sw.ElapsedMilliseconds.ToString() + "ms";
+
+            double maxVal = -999;
            
             for(int f = 0;f< s.Length; f++)
             {
@@ -959,6 +982,20 @@ namespace Project
             
         }
 
+        private void threadingToggle_Click(object sender, EventArgs e)
+        {
+            if (!threading)
+            {
+                this.threadingToggle.Text = "Threading: ON";
+                threading = true;
+
+            } else
+            {
+                this.threadingToggle.Text = "Threading: OFF";
+                threading = false;
+            }
+        }
+
         private double[] InvDFT(double[] A, int N)
         {
 
@@ -1004,6 +1041,8 @@ namespace Project
             return newSamples;
         }
 
+        
+
         static double[] ApplyTriangleWindow(double[] samples)
         {
             int N = samples.Length;
@@ -1018,6 +1057,69 @@ namespace Project
             return windowedSamples;
         }
 
+        private double[] DFTThreading(double[] s, int N)
+        {
+            int[] chunkIndx = { 0, 1, 2, 3 };
+            int numThreads = 4;
+            Thread[] threads = new Thread[numThreads];
+            double[][] chunks = new double[numThreads][];
+
+            Mutex mutex = new Mutex();
+
+            for (int i = 0; i < numThreads; ++i)
+            {
+                int curIndx = i;
+                int chunkSize = i == numThreads - 1 ? s.Length - (s.Length / numThreads * curIndx) : s.Length / numThreads;
+                
+                chunks[i] = new double[chunkSize];
+
+                threads[i] = new Thread(() =>
+                {
+                    double[] result = DFTforThreads(s, N, chunkSize, chunkIndx[curIndx]);
+
+                    // Use mutex to safely update the chunks array
+                    mutex.WaitOne();
+                    try
+                    {
+                        Array.Copy(result, 0, chunks[curIndx], 0, result.Length);
+                    }
+                    finally
+                    {
+                        mutex.ReleaseMutex();
+                    }
+                });
+            }
+
+            foreach (Thread thread in threads) thread.Start();
+            foreach (Thread thread in threads) thread.Join();
+
+            double[] A = chunks[0].Concat(chunks[1]).Concat(chunks[2]).Concat(chunks[3]).ToArray();
+            return A;
+        }
+
+        private double[] DFTforThreads(double[]s, int N, int chunkSize,int chunkIndex)
+        {
+            double real;
+            double imag;
+            int n = s.Length;
+            double[] A = new double[chunkSize];
+            
+
+            for (int f = 0; f < chunkSize; f++)
+            {
+                real = 0;
+                imag = 0;
+                for (int t = 0; t < n; t++)
+                {
+                    int newF = f + (chunkSize * chunkIndex);
+                    real += (s[t] * Math.Cos(2 * Math.PI * t * newF * (N / n) / n)) / N;
+                    imag += (-s[t] * Math.Sin(2 * Math.PI * t * newF * (N / n) / n)) / N;
+
+                }
+                A[f] += Math.Sqrt((real * real) + (imag * imag));
+            }
+            return A;
+        }
 
 
 

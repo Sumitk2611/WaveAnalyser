@@ -35,18 +35,18 @@ namespace Project
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend7 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea8 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend8 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chart3 = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -86,10 +86,12 @@ namespace Project
             this.playBtn = new System.Windows.Forms.Button();
             this.pauseBtn = new System.Windows.Forms.Button();
             this.filter = new System.Windows.Forms.Button();
+            this.threadingToggle = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.statusStripSampleSizeLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStripSampleRateLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStripChannels = new System.Windows.Forms.ToolStripStatusLabel();
+            this.timerDFT = new System.Windows.Forms.ToolStripStatusLabel();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
@@ -107,61 +109,61 @@ namespace Project
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            chartArea5.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea5);
             this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
+            legend5.Name = "Legend1";
+            this.chart1.Legends.Add(legend5);
             this.chart1.Location = new System.Drawing.Point(3, 4);
             this.chart1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series1.IsVisibleInLegend = false;
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(1174, 257);
+            series5.ChartArea = "ChartArea1";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series5.IsVisibleInLegend = false;
+            series5.Legend = "Legend1";
+            series5.Name = "Series1";
+            this.chart1.Series.Add(series5);
+            this.chart1.Size = new System.Drawing.Size(1174, 258);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
             // 
             // chart2
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea2);
+            chartArea6.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea6);
             this.chart2.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend2.Name = "Legend1";
-            this.chart2.Legends.Add(legend2);
+            legend6.Name = "Legend1";
+            this.chart2.Legends.Add(legend6);
             this.chart2.Location = new System.Drawing.Point(3, 4);
             this.chart2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chart2.Name = "chart2";
             this.chart2.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Grayscale;
-            series2.ChartArea = "ChartArea1";
-            series2.IsVisibleInLegend = false;
-            series2.Legend = "Legend1";
-            series2.Name = "Sound Wave";
-            this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(582, 253);
+            series6.ChartArea = "ChartArea1";
+            series6.IsVisibleInLegend = false;
+            series6.Legend = "Legend1";
+            series6.Name = "Sound Wave";
+            this.chart2.Series.Add(series6);
+            this.chart2.Size = new System.Drawing.Size(582, 254);
             this.chart2.TabIndex = 1;
             this.chart2.Text = "chart2";
             // 
             // chart3
             // 
-            chartArea3.Name = "ChartArea1";
-            this.chart3.ChartAreas.Add(chartArea3);
+            chartArea7.Name = "ChartArea1";
+            this.chart3.ChartAreas.Add(chartArea7);
             this.chart3.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend3.Name = "Legend1";
-            this.chart3.Legends.Add(legend3);
-            this.chart3.Location = new System.Drawing.Point(3, 532);
+            legend7.Name = "Legend1";
+            this.chart3.Legends.Add(legend7);
+            this.chart3.Location = new System.Drawing.Point(3, 534);
             this.chart3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.chart3.Name = "chart3";
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series3.IsVisibleInLegend = false;
-            series3.Legend = "Legend1";
-            series3.Name = "Series1";
-            this.chart3.Series.Add(series3);
-            this.chart3.Size = new System.Drawing.Size(1174, 261);
+            series7.ChartArea = "ChartArea1";
+            series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series7.IsVisibleInLegend = false;
+            series7.Legend = "Legend1";
+            series7.Name = "Series1";
+            this.chart3.Series.Add(series7);
+            this.chart3.Size = new System.Drawing.Size(1174, 262);
             this.chart3.TabIndex = 3;
             this.chart3.Text = "chart3";
             // 
@@ -180,19 +182,19 @@ namespace Project
             // 
             // chart4
             // 
-            chartArea4.Name = "ChartArea1";
-            this.chart4.ChartAreas.Add(chartArea4);
+            chartArea8.Name = "ChartArea1";
+            this.chart4.ChartAreas.Add(chartArea8);
             this.chart4.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend4.Name = "Legend1";
-            this.chart4.Legends.Add(legend4);
+            legend8.Name = "Legend1";
+            this.chart4.Legends.Add(legend8);
             this.chart4.Location = new System.Drawing.Point(591, 4);
             this.chart4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chart4.Name = "chart4";
-            series4.ChartArea = "ChartArea1";
-            series4.Legend = "Legend1";
-            series4.Name = "Series1";
-            this.chart4.Series.Add(series4);
-            this.chart4.Size = new System.Drawing.Size(582, 253);
+            series8.ChartArea = "ChartArea1";
+            series8.Legend = "Legend1";
+            series8.Name = "Series1";
+            this.chart4.Series.Add(series8);
+            this.chart4.Size = new System.Drawing.Size(582, 254);
             this.chart4.TabIndex = 7;
             this.chart4.Text = "chart4";
             // 
@@ -212,7 +214,7 @@ namespace Project
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1184, 36);
+            this.menuStrip1.Size = new System.Drawing.Size(1184, 33);
             this.menuStrip1.TabIndex = 12;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -222,7 +224,7 @@ namespace Project
             this.newWindowBtn,
             this.exitBtn});
             this.waveAnalyzerToolStripMenuItem.Name = "waveAnalyzerToolStripMenuItem";
-            this.waveAnalyzerToolStripMenuItem.Size = new System.Drawing.Size(138, 32);
+            this.waveAnalyzerToolStripMenuItem.Size = new System.Drawing.Size(138, 29);
             this.waveAnalyzerToolStripMenuItem.Text = "WaveAnalyzer";
             // 
             // newWindowBtn
@@ -245,7 +247,7 @@ namespace Project
             this.openFileBtn,
             this.saveFileBtn});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(54, 32);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(54, 29);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openFileBtn
@@ -268,7 +270,7 @@ namespace Project
             this.sampleSizeMenu,
             this.sampleRateMenu});
             this.recordToolStripMenuItem.Name = "recordToolStripMenuItem";
-            this.recordToolStripMenuItem.Size = new System.Drawing.Size(98, 32);
+            this.recordToolStripMenuItem.Size = new System.Drawing.Size(98, 29);
             this.recordToolStripMenuItem.Text = "Recorder";
             // 
             // sampleSizeMenu
@@ -333,7 +335,7 @@ namespace Project
             this.analyseToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.analyseToolStripMenuItem1});
             this.analyseToolStripMenuItem.Name = "analyseToolStripMenuItem";
-            this.analyseToolStripMenuItem.Size = new System.Drawing.Size(89, 32);
+            this.analyseToolStripMenuItem.Size = new System.Drawing.Size(89, 29);
             this.analyseToolStripMenuItem.Text = "Analyse";
             // 
             // analyseToolStripMenuItem1
@@ -367,7 +369,7 @@ namespace Project
             this.chart1ToolStripMenuItem,
             this.chart2ToolStripMenuItem});
             this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
-            this.cutToolStripMenuItem.Size = new System.Drawing.Size(55, 32);
+            this.cutToolStripMenuItem.Size = new System.Drawing.Size(55, 29);
             this.cutToolStripMenuItem.Text = "Cut";
             // 
             // chart1ToolStripMenuItem
@@ -387,7 +389,7 @@ namespace Project
             // copyToolStripMenuItem
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(70, 32);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(70, 29);
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
@@ -397,7 +399,7 @@ namespace Project
             this.pasteToChart1,
             this.pasteToChart2});
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(69, 32);
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(69, 29);
             this.pasteToolStripMenuItem.Text = "Paste";
             // 
             // pasteToChart1
@@ -419,7 +421,7 @@ namespace Project
             this.windowingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.triangleToolStripMenuItem});
             this.windowingToolStripMenuItem.Name = "windowingToolStripMenuItem";
-            this.windowingToolStripMenuItem.Size = new System.Drawing.Size(119, 32);
+            this.windowingToolStripMenuItem.Size = new System.Drawing.Size(119, 29);
             this.windowingToolStripMenuItem.Text = "Windowing";
             // 
             // triangleToolStripMenuItem
@@ -427,13 +429,13 @@ namespace Project
             this.triangleToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.WindowOnToggle});
             this.triangleToolStripMenuItem.Name = "triangleToolStripMenuItem";
-            this.triangleToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.triangleToolStripMenuItem.Size = new System.Drawing.Size(174, 34);
             this.triangleToolStripMenuItem.Text = "Triangle";
             // 
             // WindowOnToggle
             // 
             this.WindowOnToggle.Name = "WindowOnToggle";
-            this.WindowOnToggle.Size = new System.Drawing.Size(270, 34);
+            this.WindowOnToggle.Size = new System.Drawing.Size(138, 34);
             this.WindowOnToggle.Text = "On";
             this.WindowOnToggle.Click += new System.EventHandler(this.WindowOnToggle_Click);
             // 
@@ -444,6 +446,7 @@ namespace Project
             this.flowLayoutPanel1.Controls.Add(this.playBtn);
             this.flowLayoutPanel1.Controls.Add(this.pauseBtn);
             this.flowLayoutPanel1.Controls.Add(this.filter);
+            this.flowLayoutPanel1.Controls.Add(this.threadingToggle);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(2, 2);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
@@ -499,6 +502,16 @@ namespace Project
             this.filter.UseVisualStyleBackColor = true;
             this.filter.Click += new System.EventHandler(this.filter_Click);
             // 
+            // threadingToggle
+            // 
+            this.threadingToggle.Location = new System.Drawing.Point(612, 3);
+            this.threadingToggle.Name = "threadingToggle";
+            this.threadingToggle.Size = new System.Drawing.Size(167, 34);
+            this.threadingToggle.TabIndex = 16;
+            this.threadingToggle.Text = "Threading: OFF";
+            this.threadingToggle.UseVisualStyleBackColor = true;
+            this.threadingToggle.Click += new System.EventHandler(this.threadingToggle_Click);
+            // 
             // statusStrip1
             // 
             this.statusStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -506,8 +519,9 @@ namespace Project
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusStripSampleSizeLabel,
             this.statusStripSampleRateLabel,
-            this.statusStripChannels});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 839);
+            this.statusStripChannels,
+            this.timerDFT});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 842);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Padding = new System.Windows.Forms.Padding(10, 0, 1, 0);
             this.statusStrip1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -533,6 +547,12 @@ namespace Project
             this.statusStripChannels.Size = new System.Drawing.Size(102, 33);
             this.statusStripChannels.Text = "Channels: 0";
             // 
+            // timerDFT
+            // 
+            this.timerDFT.Name = "timerDFT";
+            this.timerDFT.Size = new System.Drawing.Size(121, 33);
+            this.timerDFT.Text = "DFT Timing: 0";
+            // 
             // tableLayoutPanel4
             // 
             this.tableLayoutPanel4.ColumnCount = 1;
@@ -542,14 +562,14 @@ namespace Project
             this.tableLayoutPanel4.Controls.Add(this.statusStrip1, 0, 2);
             this.tableLayoutPanel4.Controls.Add(this.flowLayoutPanel1, 0, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 36);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 33);
             this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 3;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(1184, 879);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(1184, 882);
             this.tableLayoutPanel4.TabIndex = 15;
             // 
             // tableLayoutPanel5
@@ -568,7 +588,7 @@ namespace Project
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(1180, 795);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(1180, 798);
             this.tableLayoutPanel5.TabIndex = 0;
             // 
             // tableLayoutPanel6
@@ -579,13 +599,13 @@ namespace Project
             this.tableLayoutPanel6.Controls.Add(this.chart4, 1, 0);
             this.tableLayoutPanel6.Controls.Add(this.chart2, 0, 0);
             this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(2, 267);
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(2, 268);
             this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.RowCount = 1;
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(1176, 261);
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(1176, 262);
             this.tableLayoutPanel6.TabIndex = 0;
             // 
             // WaveAnalyzer
@@ -754,6 +774,8 @@ namespace Project
         private ToolStripMenuItem windowingToolStripMenuItem;
         private ToolStripMenuItem triangleToolStripMenuItem;
         private ToolStripMenuItem WindowOnToggle;
+        private Button threadingToggle;
+        private ToolStripStatusLabel timerDFT;
     }
 
     
