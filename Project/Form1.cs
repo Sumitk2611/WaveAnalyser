@@ -20,7 +20,7 @@ using NAudio.Wave;
 
 namespace Project
 {
-    
+
     public partial class WaveAnalyzer : Form
     {
         public struct RecordData
@@ -28,7 +28,7 @@ namespace Project
             public IntPtr data;
             public uint dataLength;
         }
-        
+
         static bool isTriangleWindow = false;
 
         static string fileOpen;
@@ -59,7 +59,7 @@ namespace Project
         bool channel1AnalyzeBtnEnabled = false;
         bool channel2AnalyzeBtnEnabled = false;
 
-        Chart sentFilterReq;
+        Chart sentFilterReq, selectedChart;
 
         public WaveAnalyzer()
         {
@@ -80,39 +80,39 @@ namespace Project
         private void CreateAmplitudeChart(double[] s, Chart chart)
         {
             chart.Series[0].Points.Clear();
-            for (int t = 0; t <s.Length; t++)
+            for (int t = 0; t < s.Length; t++)
             {
 
                 chart.Series[0].Points.AddXY(t, s[t]);
             }
             chart.Visible = true;
-            
-    }
+
+        }
 
 
         private void UpdateChart()
         {
-            
+
             {
                 N = 100;
                 int f = 1;
                 storedData = new double[1][];
                 storedData[0] = calculateSamples(f, N);
-               
+
                 CreateAmplitudeChart(storedData[0], chart1);
                 int width = chart1.Width;
                 int height = chart1.Height;
                 chart1.Size = new Size(width++, height++);
-            } 
-            
-            
+            }
+
+
         }
 
         private void displayDefault()
         {
             chart1.Series[0].Points.AddXY(0, 0);
-            chart3.Series[0].Points.AddXY(0 , 0);
-            chart2.Series[0].Points.AddXY (0 , 0);
+            chart3.Series[0].Points.AddXY(0, 0);
+            chart2.Series[0].Points.AddXY(0, 0);
             chart4.Series[0].Points.AddXY(0, 0);
 
             //Menustrip default selections
@@ -125,11 +125,11 @@ namespace Project
 
         private double[] calculateSamples(int f, int N)
         {
-            double[] s = new double[5*N];
-            for (int t = 0; t <5 * N; t++)
+            double[] s = new double[5 * N];
+            for (int t = 0; t < 5 * N; t++)
             {
-                s[t] =10* Math.Sin(2 * Math.PI * (t) * f / N + Math.PI/2);
-                s[t] +=1* Math.Sin(2 * Math.PI * (t) * 12 / N + Math.PI/2);
+                s[t] = 10 * Math.Sin(2 * Math.PI * (t) * f / N + Math.PI / 2);
+                s[t] += 1 * Math.Sin(2 * Math.PI * (t) * 12 / N + Math.PI / 2);
             }
             return s;
         }
@@ -159,34 +159,34 @@ namespace Project
             //display the timer for DFT
             this.timerDFT.Text = "DFT Timing: " + sw.ElapsedMilliseconds.ToString() + "ms";
 
-            
-            for (int f = 1;f< A.Length; f++)
-            { 
+
+            for (int f = 1; f < A.Length; f++)
+            {
                 freqChart.Series[0].Points.AddXY(f, (A[f]));
             }
-            
+
             freqChart.Visible = true;
 
         }
 
         private double[] DFT(double[] s, int N)
         {
-            
+
             double real;
             double imag;
             int n = s.Length < N ? s.Length : N;
             double[] A = new double[n];
-            
+
 
             for (int f = 0; f < n; f++)
             {
                 real = 0;
                 imag = 0;
-                for(int t = 0; t < s.Length; t++)
+                for (int t = 0; t < s.Length; t++)
                 {
-                    real += (s[t] * Math.Cos(2 * Math.PI * t * f * (N/n)/n))/s.Length;
-                    imag += (-s[t] * Math.Sin(2 * Math.PI * t * f* (N / n)/n))/s.Length;
-                    
+                    real += (s[t] * Math.Cos(2 * Math.PI * t * f * (N / n) / n)) / s.Length;
+                    imag += (-s[t] * Math.Sin(2 * Math.PI * t * f * (N / n) / n)) / s.Length;
+
                 }
                 A[f] = Math.Sqrt((real * real) + (imag * imag));
             }
@@ -206,7 +206,7 @@ namespace Project
             chart1.Series[0].Points.Clear();
             chart2.Series[0].Points.Clear();
             chart3.Series[0].Points.Clear();
-            
+
         }
         private void makeChartZoomable(object sender, MouseEventArgs e)
         {
@@ -229,7 +229,7 @@ namespace Project
                 double posYStart = chart.ChartAreas[0].AxisY.PixelPositionToValue(e.Location.Y) - (yMax - yMin) / 4;
                 double posYFinish = chart.ChartAreas[0].AxisY.PixelPositionToValue(e.Location.Y) + (yMax - yMin) / 4;
 
-                chart.ChartAreas[0].AxisX.ScaleView.Zoom(posXStart, posXFinish,DateTimeIntervalType.Number, true);
+                chart.ChartAreas[0].AxisX.ScaleView.Zoom(posXStart, posXFinish, DateTimeIntervalType.Number, true);
                 chart.ChartAreas[0].AxisY.ScaleView.Zoom(posYStart, posYFinish, DateTimeIntervalType.Number, true);
             }
         }
@@ -240,15 +240,15 @@ namespace Project
             form1.Show();
         }
 
-       
+
 
         private void readFile(string filename)
         {
 
             byte[] headerBytes = new byte[12];
-            using (FileStream fs = new FileStream(filename,FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
             {
-                fs.Read(headerBytes, 0, headerBytes.Length);  
+                fs.Read(headerBytes, 0, headerBytes.Length);
             }
             string waveFormat = Encoding.ASCII.GetString(headerBytes, 8, 4);
             if (waveFormat == "WAVE")
@@ -259,9 +259,9 @@ namespace Project
                 N = BitConverter.ToInt16(fileData, 24);
                 channel = BitConverter.ToInt16(fileData, 22);
 
-                
+
                 short[] audio16 = null;
-                double[][]s = new double [2][];
+                double[][] s = new double[2][];
 
                 if (bitsPerSample == 8)
                 {
@@ -269,7 +269,7 @@ namespace Project
                     s[0] = new double[audio16.Length];
                     if (channel == 2)
                     {
-                        
+
                         s = readstereo(audio16);
                         chart3.Visible = true;
                         chart4.Visible = true;
@@ -295,7 +295,7 @@ namespace Project
                         chart3.Visible = false;
                         chart4.Visible = false;
                     }
-                    
+
 
                 }
 
@@ -307,38 +307,38 @@ namespace Project
                         chart1.Series[0].Points.AddXY(i, s[0][i]);
                     }
 
-                    
-                    
-                } else if(channel == 2) 
+
+
+                } else if (channel == 2)
                 {
-                    for(int i = 0;i < audio16.Length/2 +1;i++)
+                    for (int i = 0; i < audio16.Length / 2 + 1; i++)
                     {
                         s[0][i] /= MaxValue16Bit;
                         s[1][i] /= MaxValue16Bit;
-                        chart1.Series[0].Points.AddXY(i,s[0][i]);
-                        chart3.Series[0].Points.AddXY(i,s[1][i]);
+                        chart1.Series[0].Points.AddXY(i, s[0][i]);
+                        chart3.Series[0].Points.AddXY(i, s[1][i]);
                     }
 
-                  
+
 
                 }
                 storedData = s;
                 setStatusStrip();
             }
-            
-           
+
+
         }
 
-        double[][]readstereo(short[] audio16)
+        double[][] readstereo(short[] audio16)
         {
             int leftCounter = 0;
             int rightCounter = 0;
             int size = audio16.Length + 2;
             double[][] s = new double[2][];
-            s[0] = new double[size/2];
-            s[1] = new double[size/2];
-            
-            for (int i = 0; i < audio16.Length ; i++)
+            s[0] = new double[size / 2];
+            s[1] = new double[size / 2];
+
+            for (int i = 0; i < audio16.Length; i++)
             {
 
                 if (i % 2 == 0)
@@ -354,19 +354,19 @@ namespace Project
             }
             return s;
         }
-        
+
 
         short[] Convert8BitTo16Bit(byte[] data)
         {
             int max8BitValue = 255; // Maximum value for 8-bit audio
-             // Maximum value for 16-bit audio
-            
+                                    // Maximum value for 16-bit audio
+
             int factor = (int)MaxValue16Bit / max8BitValue;
 
-            
+
             short[] output = new short[data.Length];
 
-            for(int i = 0; i < data.Length; i++)
+            for (int i = 0; i < data.Length; i++)
             {
                 short sample16Bit = (short)(factor * data[i]);
                 output[i] = sample16Bit;
@@ -396,15 +396,15 @@ namespace Project
             byte[] audioData;
             if (channel == 1)
             {
-                if(bitsPerSample == 8)
-                audioData = ConvertDoubleArrayToByteArray8bit(audio[0]);
+                if (bitsPerSample == 8)
+                    audioData = ConvertDoubleArrayToByteArray8bit(audio[0]);
                 else audioData = ConvertDoubleArrayToByteArray(audio[0]);
             } else
             {
-                double[]samples = InterleaveStereoAudio(audio[0], audio[1]);
+                double[] samples = InterleaveStereoAudio(audio[0], audio[1]);
                 audioData = ConvertDoubleArrayToByteArray(samples);
             }
-            
+
             try
             {
                 // Create a BinaryWriter to write binary data to the file
@@ -444,7 +444,7 @@ namespace Project
         static byte[] ConvertDoubleArrayToByteArray8bit(double[] doubleSamples)
         {
             // Create a byte array with enough capacity to store all the double values
-             // Assuming 16-bit (2 bytes) per sample
+            // Assuming 16-bit (2 bytes) per sample
             short[] shortSamples = new short[doubleSamples.Length];
             // Convert each double sample to a 16-bit signed integer and store it in the byte array
             for (int i = 0; i < doubleSamples.Length; i++)
@@ -455,7 +455,7 @@ namespace Project
             byte[] byteSamples = new byte[shortSamples.Length];
             for (int i = 0; i < shortSamples.Length; ++i)
             {
-                byteSamples[i] = (byte)(255/MaxValue16Bit * shortSamples[i]);
+                byteSamples[i] = (byte)(255 / MaxValue16Bit * shortSamples[i]);
             }
 
 
@@ -480,13 +480,13 @@ namespace Project
 
         static double[] InterleaveStereoAudio(double[] leftChannel, double[] rightChannel)
         {
-            int numSamples = Math.Max(leftChannel.Length, rightChannel.Length)/2;
+            int numSamples = Math.Max(leftChannel.Length, rightChannel.Length) / 2;
             double[] interleavedSamples = new double[numSamples * 2]; // Interleaved stereo data
 
             for (int i = 0; i < numSamples; i++)
             {
                 //leftChannel
-                if(leftChannel.Length - 1 >= i)
+                if (leftChannel.Length - 1 >= i)
                 {
                     interleavedSamples[i * 2] = leftChannel[i];
                 } else
@@ -503,7 +503,7 @@ namespace Project
                 {
                     interleavedSamples[i * 2 + 1] = 0;
                 }
-                 
+
             }
 
             return interleavedSamples;
@@ -511,13 +511,25 @@ namespace Project
 
         private void saveFileBtn_Click(object sender, EventArgs e)
         {
+            SaveFile();
+
+        }
+
+        private void SaveFile()
+        {
             if (fileOpen == null)
             {
-                MessageBox.Show("Could not save file\n There was no file open", "Error");
-            }
-            else
-            {
-                writeFile(fileOpen, storedData);
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Title = "Select a File";
+                saveFileDialog.DefaultExt = ".wav";
+                saveFileDialog.Filter = "Wav Files (*.wav)|*.wav|All Files (*.*)|*.*";
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+
+                    fileOpen = saveFileDialog.FileName;
+                    writeFile(fileOpen, storedData);
+
+                }
             }
         }
 
@@ -525,7 +537,7 @@ namespace Project
         {
             // Clear the previously selected data points
             if (selectedSamples == null) return;
-            for(int i = 0; i < selectedSamples.Length; ++i)
+            for (int i = 0; i < selectedSamples.Length; ++i)
             {
                 selectedSamples[i] = 0;
             }
@@ -536,27 +548,28 @@ namespace Project
             Chart chart = (Chart)sender;
             ChartArea chartArea = chart.ChartAreas["ChartArea1"];
             Series series = chart.Series[0];
+            selectedChart = chart;
 
             // Determine the X-values of the selection range
             startX = chartArea.CursorX.SelectionStart;
             endX = chartArea.CursorX.SelectionEnd;
 
             List<DataPoint> selectedDataPoints = new List<DataPoint>();
-            
-            if(startX> endX)
+
+            if (startX > endX)
             {
                 double temp = startX;
                 startX = endX;
                 endX = temp;
-                
+
             }
-           
+
             // Iterate through data points to find selected points
             foreach (DataPoint point in series.Points)
             {
                 if (point.XValue >= startX && point.XValue <= endX)
                 {
-                   selectedDataPoints.Add(point);
+                    selectedDataPoints.Add(point);
                 }
             }
             selectedSamples = new double[selectedDataPoints.Count];
@@ -601,7 +614,7 @@ namespace Project
         public static extern void SetData(RecordData data);
         [DllImport("..\\..\\..\\Recorder_DLL\\recorder_dll.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
         public static extern void SetRecorderSpecs(int sampleSize, int sampleRate, int channels);
-        
+
 
 
         private void recordBtn_Click(object sender, EventArgs e)
@@ -658,7 +671,7 @@ namespace Project
                 setStatusStrip();
             }
             else
-            {   
+            {
                 SetRecorderSpecs(sampleSize, sampleRate, 1);
                 StartRec();
                 recordingStatus = true;
@@ -692,10 +705,10 @@ namespace Project
             {
                 int size = 2 * storedData[0].Length - 2;
                 short[] shortSamples = new short[size];
-                for (int i = 0; i < storedData[0].Length; i+=2)
+                for (int i = 0; i < storedData[0].Length; i += 2)
                 {
                     shortSamples[i] = (short)(storedData[0][i] * MaxValue16Bit);
-                    shortSamples[i+1] = (short)(storedData[1][i] * MaxValue16Bit);
+                    shortSamples[i + 1] = (short)(storedData[1][i] * MaxValue16Bit);
                 }
                 return shortSamples;
             }
@@ -774,11 +787,11 @@ namespace Project
         /*
          * End of recorder
          */
-        
+
 
         private void pasteToChart1_Click(object sender, EventArgs e)
         {
-            
+
             storedData[0] = pasteToChart(chart1);
         }
 
@@ -798,9 +811,9 @@ namespace Project
             int counter = 0;
             for (int t = 0; t < samples.Length; t++)
             {
-                if(t == startX)
+                if (t == startX)
                 {
-                    for(int i = 0; i < s.Length; ++i,++t)
+                    for (int i = 0; i < s.Length; ++i, ++t)
                     {
                         samples[t] = s[i];
                     }
@@ -815,7 +828,7 @@ namespace Project
         //Copys the points from the charts
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(selectedSamples == null) { 
+            if (selectedSamples == null) {
                 MessageBox.Show("Nothing Selected", "Error");
 
                 return;
@@ -829,7 +842,7 @@ namespace Project
             storedData[1] = pasteToChart(chart3);
         }
 
-        
+
 
         private void cutchart1ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -844,7 +857,7 @@ namespace Project
         /// <returns>new Samples without the selectedsamples</returns>
         private double[] cut(Chart chart)
         {
-            if(selectedSamples == null)
+            if (selectedSamples == null)
             {
                 MessageBox.Show("Nothing Selected", "Error");
 
@@ -867,7 +880,7 @@ namespace Project
 
                 newSamples[t - counter] = samples.Points[t].YValues[0];
             }
-            
+
 
             CreateAmplitudeChart(newSamples, chart);
 
@@ -882,7 +895,7 @@ namespace Project
 
         private void rightClickonChart1(object sender, MouseEventArgs e)
         {
-            if(e.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Right)
             {
                 //  
             }
@@ -906,29 +919,29 @@ namespace Project
                 return;
             }
 
-            double [] filter = createFilter(fEndX, chart2.Series[0].Points.Count);
+            double[] filter = createFilter(fEndX, chart2.Series[0].Points.Count);
             double[] filterInTimeDomain = InvDFT(filter, N);
 
             storedData[0] = convolution(storedData[0], filterInTimeDomain);
             if (channel == 2)
                 storedData[1] = convolution(storedData[1], filterInTimeDomain);
-            
+
             for (int i = 0; i < selectedSamples.Length; ++i)
             {
-                selectedSamples[i] = storedData[0][i + (int)startX ];
+                selectedSamples[i] = storedData[0][i + (int)startX];
             }
             if (sentFilterReq == chart2)
             {
                 CreateAmplitudeChart(storedData[0], chart1);
-                if (isTriangleWindow) 
+                if (isTriangleWindow)
                 {
                     double[] windowedSamples = ApplyTriangleWindow(selectedSamples);
                     CreateFreqChart(windowedSamples, N, chart2);
                 } else
                 {
-                    CreateFreqChart(selectedSamples, N, chart2);    
+                    CreateFreqChart(selectedSamples, N, chart2);
                 }
-                
+
             }
             else
             {
@@ -956,7 +969,7 @@ namespace Project
             double fStartX = chartArea.CursorX.SelectionStart;
             fEndX = chartArea.CursorX.SelectionEnd;
 
-            
+
 
             if (fStartX > fEndX)
             {
@@ -966,7 +979,7 @@ namespace Project
 
             }
 
-            
+
         }
 
         /// <summary>
@@ -978,11 +991,11 @@ namespace Project
         /// <returns>newly created filter</returns>
         private double[] createFilter(double fbin, int sizeOfFilter)
         {
-            double[] filter = new double[sizeOfFilter]; 
-            for(int i = 0; i < sizeOfFilter; ++i)
+            double[] filter = new double[sizeOfFilter];
+            for (int i = 0; i < sizeOfFilter; ++i)
             {
-                if(i <= fbin || i > (sizeOfFilter - fbin))
-                filter[i] = 1;
+                if (i <= fbin || i > (sizeOfFilter - fbin))
+                    filter[i] = 1;
                 else filter[i] = 0;
             }
             return filter;
@@ -1001,7 +1014,7 @@ namespace Project
                 this.WindowOnToggle.Text = "On";
                 isTriangleWindow = true;
             }
-            
+
         }
 
 
@@ -1027,7 +1040,7 @@ namespace Project
         /// <param name="N">Sampling Rate</param>
         /// <returns></returns>
         private double[] InvDFT(double[] A, int N)
-            {
+        {
 
             double real;
             double imag;
@@ -1052,16 +1065,16 @@ namespace Project
         /// <param name="s">samples </param>
         /// <param name="filter">filter that has been passed through Inverse DFT</param>
         /// <returns>cnvolved samples</returns>
-        private double[] convolution(double[]s, double[] filter)
+        private double[] convolution(double[] s, double[] filter)
         {
             double[] newSamples = new double[s.Length];
-            for(int t = 0; t < s.Length;t++)
+            for (int t = 0; t < s.Length; t++)
             {
                 newSamples[t] = 0;
-                for ( int i = 0; i < filter.Length; i++)
+                for (int i = 0; i < filter.Length; i++)
                 {
-                    
-                    if(t+i < s.Length)
+
+                    if (t + i < s.Length)
                     {
                         newSamples[t] += (s[t + i] * filter[i]);
                     }
@@ -1069,9 +1082,9 @@ namespace Project
                     {
                         int circularIndex = (t + i) - s.Length;
                         newSamples[t] += s[circularIndex] * filter[i];
-                        
+
                     }
-                    
+
                 }
             }
             return newSamples;
@@ -1104,10 +1117,10 @@ namespace Project
         /// <returns>double array A which contains values of Amplitude of each Frequency Bin</returns>
         private double[] DFTThreading(double[] s, int N)
         {
-            
+
             int numThreads = 4;
             int[] chunkIndx = new int[numThreads];
-            
+
 
             Thread[] threads = new Thread[numThreads];
             for (int i = 0; i < numThreads; i++)
@@ -1123,12 +1136,12 @@ namespace Project
             {
                 int curIndx = i;
                 int chunkSize = i == numThreads - 1 ? s.Length - (s.Length / numThreads * curIndx) : s.Length / numThreads;
-                chunkSize = chunkSize < N /numThreads ? chunkSize : N/numThreads;
-                if(i == (numThreads - 1))
+                chunkSize = chunkSize < N / numThreads ? chunkSize : N / numThreads;
+                if (i == (numThreads - 1))
                 {
-                    if(s.Length < N)
+                    if (s.Length < N)
                     {
-                        chunkSize = s.Length - chunkSize * (numThreads-1);
+                        chunkSize = s.Length - chunkSize * (numThreads - 1);
                     }
                     else
                     {
@@ -1161,13 +1174,13 @@ namespace Project
             int totalLength = chunks.Sum(chunk => chunk.Length);
             double[] A = new double[totalLength];
             int currentIndex = 0;
-            for (int i = 0;i < numThreads; i++)
+            for (int i = 0; i < numThreads; i++)
             {
                 Array.Copy(chunks[i], 0, A, currentIndex, chunks[i].Length);
                 currentIndex += chunks[i].Length;
             }
 
-           return A;
+            return A;
         }
 
         /// <summary>
@@ -1178,13 +1191,13 @@ namespace Project
         /// <param name="chunkSize">Size of the array to return as well frequencies to calculate up to</param>
         /// <param name="chunkIndex">The starting index from where to start calculating values for frequencies</param>
         /// <returns></returns>
-        private double[] DFTforThreads(double[]s, int N, int chunkSize,int chunkIndex)
+        private double[] DFTforThreads(double[] s, int N, int chunkSize, int chunkIndex)
         {
             double real;
             double imag;
             int n = s.Length < N ? s.Length : N;
             double[] A = new double[chunkSize];
-            
+
 
             for (int f = 0; f < chunkSize; f++)
             {
@@ -1201,6 +1214,65 @@ namespace Project
                 A[f] = Math.Sqrt((real * real) + (imag * imag));
             }
             return A;
+        }
+
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            
+            if (e.Control && e.KeyCode == Keys.S)
+            {
+                if (e.Handled) return;
+                SaveFile();
+                e.Handled = true;
+            }
+
+            if (e.Control && e.KeyCode == Keys.X)
+            {
+                if (e.Handled) return;
+                if (selectedChart == chart1)
+                {
+                    
+                    cutchart1ToolStripMenuItem_Click(null, null);
+                    e.Handled = true;
+                    return;
+                }
+                else
+                {
+
+                    cutchart2ToolStripMenuItem_Click(null, null);
+                    e.Handled = true;
+                    return;
+                }
+
+            }
+
+            if (e.Control && e.KeyCode == Keys.C) {
+                if (e.Handled) return;
+                copyToolStripMenuItem_Click((Chart)sender, null);
+                e.Handled = true;
+                return;
+            }
+            if (e.Control && e.KeyCode == Keys.V)
+            {
+                if (e.Handled) return;
+                if (selectedChart == chart1)
+                {
+                    pasteToChart1_Click(null, null);
+                    e.Handled = true;
+
+                }
+                if (selectedChart == chart3)
+                {
+                    pasteToChart2_Click_1(null, null);
+                    e.Handled = true;
+                }
+                
+
+            }
+
+            // Prevent further processing of the Ctrl+S key combination
+            e.Handled = true;
+        
         }
 
 
