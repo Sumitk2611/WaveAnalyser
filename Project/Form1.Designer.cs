@@ -72,8 +72,8 @@ namespace Project
             this.channel1AnalyzeBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.channel2AnalyzeBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.chart1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.chart2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cutChart1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.cutChart2 = new System.Windows.Forms.ToolStripMenuItem();
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pasteToChart1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -92,6 +92,7 @@ namespace Project
             this.statusStripSampleRateLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStripChannels = new System.Windows.Forms.ToolStripStatusLabel();
             this.timerDFT = new System.Windows.Forms.ToolStripStatusLabel();
+            this.windowingStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
@@ -366,25 +367,25 @@ namespace Project
             // cutToolStripMenuItem
             // 
             this.cutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.chart1ToolStripMenuItem,
-            this.chart2ToolStripMenuItem});
+            this.cutChart1,
+            this.cutChart2});
             this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
             this.cutToolStripMenuItem.Size = new System.Drawing.Size(55, 29);
             this.cutToolStripMenuItem.Text = "Cut";
             // 
-            // chart1ToolStripMenuItem
+            // cutChart1
             // 
-            this.chart1ToolStripMenuItem.Name = "chart1ToolStripMenuItem";
-            this.chart1ToolStripMenuItem.Size = new System.Drawing.Size(171, 34);
-            this.chart1ToolStripMenuItem.Text = "Chart 1";
-            this.chart1ToolStripMenuItem.Click += new System.EventHandler(this.chart1ToolStripMenuItem_Click);
+            this.cutChart1.Name = "cutChart1";
+            this.cutChart1.Size = new System.Drawing.Size(270, 34);
+            this.cutChart1.Text = "Chart 1";
+            this.cutChart1.Click += new System.EventHandler(this.cutchart1ToolStripMenuItem_Click);
             // 
-            // chart2ToolStripMenuItem
+            // cutChart2
             // 
-            this.chart2ToolStripMenuItem.Name = "chart2ToolStripMenuItem";
-            this.chart2ToolStripMenuItem.Size = new System.Drawing.Size(171, 34);
-            this.chart2ToolStripMenuItem.Text = "Chart 2";
-            this.chart2ToolStripMenuItem.Click += new System.EventHandler(this.chart2ToolStripMenuItem_Click);
+            this.cutChart2.Name = "cutChart2";
+            this.cutChart2.Size = new System.Drawing.Size(270, 34);
+            this.cutChart2.Text = "Chart 2";
+            this.cutChart2.Click += new System.EventHandler(this.cutchart2ToolStripMenuItem_Click);
             // 
             // copyToolStripMenuItem
             // 
@@ -520,7 +521,8 @@ namespace Project
             this.statusStripSampleSizeLabel,
             this.statusStripSampleRateLabel,
             this.statusStripChannels,
-            this.timerDFT});
+            this.timerDFT,
+            this.windowingStatus});
             this.statusStrip1.Location = new System.Drawing.Point(0, 842);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Padding = new System.Windows.Forms.Padding(10, 0, 1, 0);
@@ -552,6 +554,12 @@ namespace Project
             this.timerDFT.Name = "timerDFT";
             this.timerDFT.Size = new System.Drawing.Size(121, 33);
             this.timerDFT.Text = "DFT Timing: 0";
+            // 
+            // windowingStatus
+            // 
+            this.windowingStatus.Name = "windowingStatus";
+            this.windowingStatus.Size = new System.Drawing.Size(144, 33);
+            this.windowingStatus.Text = "Windowing: OFF";
             // 
             // tableLayoutPanel4
             // 
@@ -706,12 +714,14 @@ namespace Project
             {
                 chartArea1.AxisX.Title = "frequency";
                 chartArea1.AxisY.Title = "Amplitude";
-                chartArea1.AxisX.Minimum = 0;
+                chartArea1.AxisX.LabelStyle.Format = "0.00";
+                
                 chartArea1.AxisX.ScaleView.Zoomable = false;
                 chartArea1.AxisY.ScaleView.Zoomable = false;
                 chartArea1.CursorX.IsUserSelectionEnabled = true;
                 chart.SelectionRangeChanging += FreqChart_SelectionRangeChanging;
                 chart.SelectionRangeChanged += FreqChart_SelectionRangeChanged;
+                chart.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.makeChartZoomable);
                 chart.Series[0].Color = Color.Blue;
             }
         }
@@ -768,14 +778,15 @@ namespace Project
         private ToolStripMenuItem pasteToChart1;
         private ToolStripMenuItem pasteToChart2;
         private ToolStripMenuItem cutToolStripMenuItem;
-        private ToolStripMenuItem chart1ToolStripMenuItem;
-        private ToolStripMenuItem chart2ToolStripMenuItem;
+        private ToolStripMenuItem cutChart1;
+        private ToolStripMenuItem cutChart2;
         private Button filter;
         private ToolStripMenuItem windowingToolStripMenuItem;
         private ToolStripMenuItem triangleToolStripMenuItem;
         private ToolStripMenuItem WindowOnToggle;
         private Button threadingToggle;
         private ToolStripStatusLabel timerDFT;
+        private ToolStripStatusLabel windowingStatus;
     }
 
     

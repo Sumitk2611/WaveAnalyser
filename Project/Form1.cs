@@ -28,6 +28,7 @@ namespace Project
             public IntPtr data;
             public uint dataLength;
         }
+        
         static bool isTriangleWindow = false;
 
         static string fileOpen;
@@ -124,12 +125,11 @@ namespace Project
 
         private double[] calculateSamples(int f, int N)
         {
-            double[] s = new double[N];
-            for (int t = 0; t < N; t++)
+            double[] s = new double[5*N];
+            for (int t = 0; t <5 * N; t++)
             {
                 s[t] =10* Math.Sin(2 * Math.PI * (t) * f / N + Math.PI/2);
-/*                s[t] +=1* Math.Sin(2 * Math.PI * (t) * 25 / N + Math.PI/2);
-*/                s[t] +=1* Math.Sin(2 * Math.PI * (t) * 12 / N + Math.PI/2);
+                s[t] +=1* Math.Sin(2 * Math.PI * (t) * 12 / N + Math.PI/2);
             }
             return s;
         }
@@ -159,18 +159,13 @@ namespace Project
             //display the timer for DFT
             this.timerDFT.Text = "DFT Timing: " + sw.ElapsedMilliseconds.ToString() + "ms";
 
-            double maxVal = -999;
-           
-            for(int f = 0;f< s.Length; f++)
-            {
-                if(maxVal < Math.Abs(A[f]))
-                    maxVal = A[f];
-
-                freqChart.Series[0].Points.AddXY(f, Math.Abs(A[f]));
+            
+            for (int f = 1;f< A.Length; f++)
+            { 
+                freqChart.Series[0].Points.AddXY(f, (A[f]));
             }
-            freqChart.ChartAreas[0].AxisY.Maximum = maxVal;
+            
             freqChart.Visible = true;
-
 
         }
 
@@ -179,7 +174,7 @@ namespace Project
             
             double real;
             double imag;
-            int n = s.Length;
+            int n = s.Length < N ? s.Length : N;
             double[] A = new double[n];
             
 
@@ -187,13 +182,13 @@ namespace Project
             {
                 real = 0;
                 imag = 0;
-                for(int t = 0; t < n; t++)
+                for(int t = 0; t < s.Length; t++)
                 {
-                    real += (s[t] * Math.Cos(2 * Math.PI * t * f * (N/n)/n))/N;
-                    imag += (-s[t] * Math.Sin(2 * Math.PI * t * f* (N / n)/n))/N;
+                    real += (s[t] * Math.Cos(2 * Math.PI * t * f * (N/n)/n))/s.Length;
+                    imag += (-s[t] * Math.Sin(2 * Math.PI * t * f* (N / n)/n))/s.Length;
                     
                 }
-                A[f] += Math.Sqrt((real * real) + (imag * imag));
+                A[f] = Math.Sqrt((real * real) + (imag * imag));
             }
             return A;
         }
@@ -202,7 +197,8 @@ namespace Project
         private void startbutton_click(object sender, EventArgs e)
         {
             ClearChart();
-            UpdateChart(); 
+            UpdateChart();
+            setStatusStrip();
         }
 
         private void ClearChart()
@@ -311,7 +307,7 @@ namespace Project
                         chart1.Series[0].Points.AddXY(i, s[0][i]);
                     }
 
-                    /*CreateFreqChart(s[0], N, chart2);*/
+                    
                     
                 } else if(channel == 2) 
                 {
@@ -323,9 +319,7 @@ namespace Project
                         chart3.Series[0].Points.AddXY(i,s[1][i]);
                     }
 
-                    /*CreateFreqChart(s[0],N, chart2);
-
-                    CreateFreqChart(s[1], N, chart4);*/
+                  
 
                 }
                 storedData = s;
@@ -766,6 +760,10 @@ namespace Project
             this.sampleRate44100Btn.Checked = sampleRateFlag44100;
         }
 
+        /// <summary>
+        /// This function updates the values of the Status
+        /// strip.(Present at the bottom of the window)
+        /// </summary>
         private void setStatusStrip()
         {
             this.statusStripSampleRateLabel.Text = "Sample Rate: " + N.ToString() + "Hz";
@@ -776,6 +774,7 @@ namespace Project
         /*
          * End of recorder
          */
+        
 
         private void pasteToChart1_Click(object sender, EventArgs e)
         {
@@ -783,7 +782,12 @@ namespace Project
             storedData[0] = pasteToChart(chart1);
         }
 
-
+        /// <summary>
+        /// This function handles the pasting 
+        /// selected samples to a chart
+        /// </summary>
+        /// <param name="chart">chart to paste too</param>
+        /// <returns>new samples</returns>
         private double[] pasteToChart(Chart chart)
         {
             string doubleArrayAsString = Clipboard.GetText();
@@ -827,11 +831,17 @@ namespace Project
 
         
 
-        private void chart1ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void cutchart1ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             storedData[0] = cut(chart1);
         }
 
+        /// <summary>
+        /// This function handles the cut i.e.
+        /// removal of selected points from the array
+        /// </summary>
+        /// <param name="chart">the chart to cut from</param>
+        /// <returns>new Samples without the selectedsamples</returns>
         private double[] cut(Chart chart)
         {
             if(selectedSamples == null)
@@ -865,7 +875,7 @@ namespace Project
             return newSamples;
         }
 
-        private void chart2ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void cutchart2ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             storedData[1] = cut(chart3);
         }
@@ -883,6 +893,11 @@ namespace Project
             this.Close();
         }
 
+        /// <summary>
+        /// When user wants to filter from frequency chart
+        /// </summary>
+        /// <param name="sender">button</param>
+        /// <param name="e">event arguements</param>
         private void filter_Click(object sender, EventArgs e)
         {
             if (fEndX == 0)
@@ -929,6 +944,7 @@ namespace Project
             fEndX = 0;
         }
 
+        // Handles Selection
         private void FreqChart_SelectionRangeChanged(object sender, CursorEventArgs e)
         {
             Chart chart = (Chart)sender;
@@ -953,8 +969,13 @@ namespace Project
             
         }
 
-        
-
+        /// <summary>
+        /// Functionn to create the filter
+        /// from the selected samples
+        /// </summary>
+        /// <param name="fbin">Highest Frequency bin to build lowpass filter upto</param>
+        /// <param name="sizeOfFilter">how big the filter should be</param>
+        /// <returns>newly created filter</returns>
         private double[] createFilter(double fbin, int sizeOfFilter)
         {
             double[] filter = new double[sizeOfFilter]; 
@@ -973,6 +994,7 @@ namespace Project
             {
                 this.WindowOnToggle.Text = "Off";
                 isTriangleWindow = true;
+                this.windowingStatus.Text = "Windowing:Triangle";
             }
             else
             {
@@ -981,6 +1003,7 @@ namespace Project
             }
             
         }
+
 
         private void threadingToggle_Click(object sender, EventArgs e)
         {
@@ -996,8 +1019,15 @@ namespace Project
             }
         }
 
+        /// <summary>
+        /// Inverse DFT for filter
+        /// Only need the real part
+        /// </summary>
+        /// <param name="A">Array to pass through InverseDFT</param>
+        /// <param name="N">Sampling Rate</param>
+        /// <returns></returns>
         private double[] InvDFT(double[] A, int N)
-        {
+            {
 
             double real;
             double imag;
@@ -1016,6 +1046,12 @@ namespace Project
             return s;
         }
 
+        /// <summary>
+        /// Performs convolution on the samples
+        /// </summary>
+        /// <param name="s">samples </param>
+        /// <param name="filter">filter that has been passed through Inverse DFT</param>
+        /// <returns>cnvolved samples</returns>
         private double[] convolution(double[]s, double[] filter)
         {
             double[] newSamples = new double[s.Length];
@@ -1041,8 +1077,11 @@ namespace Project
             return newSamples;
         }
 
-        
-
+        /// <summary>
+        /// Applys Triangle Windowing 
+        /// </summary>
+        /// <param name="samples">samples to apply windowing too</param>
+        /// <returns>windowed samples</returns>
         static double[] ApplyTriangleWindow(double[] samples)
         {
             int N = samples.Length;
@@ -1057,11 +1096,25 @@ namespace Project
             return windowedSamples;
         }
 
+        /// <summary>
+        /// Function to call if threading is enabled
+        /// </summary>
+        /// <param name="s">samples</param>
+        /// <param name="N">sampling Rate</param>
+        /// <returns>double array A which contains values of Amplitude of each Frequency Bin</returns>
         private double[] DFTThreading(double[] s, int N)
         {
-            int[] chunkIndx = { 0, 1, 2, 3 };
+            
             int numThreads = 4;
+            int[] chunkIndx = new int[numThreads];
+            
+
             Thread[] threads = new Thread[numThreads];
+            for (int i = 0; i < numThreads; i++)
+            {
+                chunkIndx[i] = i;
+
+            }
             double[][] chunks = new double[numThreads][];
 
             Mutex mutex = new Mutex();
@@ -1070,7 +1123,18 @@ namespace Project
             {
                 int curIndx = i;
                 int chunkSize = i == numThreads - 1 ? s.Length - (s.Length / numThreads * curIndx) : s.Length / numThreads;
-                
+                chunkSize = chunkSize < N /numThreads ? chunkSize : N/numThreads;
+                if(i == (numThreads - 1))
+                {
+                    if(s.Length < N)
+                    {
+                        chunkSize = s.Length - chunkSize * (numThreads-1);
+                    }
+                    else
+                    {
+                        chunkSize = N - chunkSize * (numThreads - 1);
+                    }
+                }
                 chunks[i] = new double[chunkSize];
 
                 threads[i] = new Thread(() =>
@@ -1088,20 +1152,37 @@ namespace Project
                         mutex.ReleaseMutex();
                     }
                 });
+                threads[i].Name = i.ToString();
             }
 
             foreach (Thread thread in threads) thread.Start();
             foreach (Thread thread in threads) thread.Join();
 
-            double[] A = chunks[0].Concat(chunks[1]).Concat(chunks[2]).Concat(chunks[3]).ToArray();
-            return A;
+            int totalLength = chunks.Sum(chunk => chunk.Length);
+            double[] A = new double[totalLength];
+            int currentIndex = 0;
+            for (int i = 0;i < numThreads; i++)
+            {
+                Array.Copy(chunks[i], 0, A, currentIndex, chunks[i].Length);
+                currentIndex += chunks[i].Length;
+            }
+
+           return A;
         }
 
+        /// <summary>
+        /// Thread Proc for DFT
+        /// </summary>
+        /// <param name="s"> samples </param>
+        /// <param name="N">Sampling Rate</param>
+        /// <param name="chunkSize">Size of the array to return as well frequencies to calculate up to</param>
+        /// <param name="chunkIndex">The starting index from where to start calculating values for frequencies</param>
+        /// <returns></returns>
         private double[] DFTforThreads(double[]s, int N, int chunkSize,int chunkIndex)
         {
             double real;
             double imag;
-            int n = s.Length;
+            int n = s.Length < N ? s.Length : N;
             double[] A = new double[chunkSize];
             
 
@@ -1109,14 +1190,15 @@ namespace Project
             {
                 real = 0;
                 imag = 0;
-                for (int t = 0; t < n; t++)
+                for (int t = 0; t < s.Length; t++)
                 {
                     int newF = f + (chunkSize * chunkIndex);
-                    real += (s[t] * Math.Cos(2 * Math.PI * t * newF * (N / n) / n)) / N;
-                    imag += (-s[t] * Math.Sin(2 * Math.PI * t * newF * (N / n) / n)) / N;
+                    real += (s[t] * Math.Cos(2 * Math.PI * t * newF * (N / n) / n)) / s.Length;
+                    imag += (-s[t] * Math.Sin(2 * Math.PI * t * newF * (N / n) / n)) / s.Length;
 
                 }
-                A[f] += Math.Sqrt((real * real) + (imag * imag));
+                A[f] = 0;
+                A[f] = Math.Sqrt((real * real) + (imag * imag));
             }
             return A;
         }
