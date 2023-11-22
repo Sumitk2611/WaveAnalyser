@@ -454,14 +454,14 @@ namespace Project
                 shortSamples[i] = (short)(doubleSamples[i] * short.MaxValue);
             }
 
-            byte[] byteSamples = new byte[shortSamples.Length];
-            for (int i = 0; i < shortSamples.Length; ++i)
+            byte[] byteArray = new byte[shortSamples.Length];
+            for (int j = 0; j < shortSamples.Length; j++)
             {
-                byteSamples[i] = (byte)(255 / MaxValue16Bit * shortSamples[i]);
+                byte to8Bit = (byte)Math.Min(((shortSamples[j]) / 256 + 128), 255);
+                byteArray[j] = to8Bit;
+
             }
-
-
-            return byteSamples;
+            return byteArray;
         }
 
         static byte[] ConvertDoubleArrayToByteArray(double[] doubleSamples)
