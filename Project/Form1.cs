@@ -519,7 +519,7 @@ namespace Project
 
         private void SaveFile()
         {
-            if (fileOpen == null)
+            if (storedData.Length != 0)
             {
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Title = "Select a File";
