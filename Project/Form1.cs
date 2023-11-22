@@ -1267,7 +1267,7 @@ namespace Project
 
             if (e.Control && e.KeyCode == Keys.C) {
                 if (e.Handled) return;
-                copyToolStripMenuItem_Click((Chart)sender, null);
+                copyToolStripMenuItem_Click(null, null);
                 e.Handled = true;
                 return;
             }

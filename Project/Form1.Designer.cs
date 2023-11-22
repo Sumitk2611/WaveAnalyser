@@ -675,9 +675,10 @@ namespace Project
 
                 chartArea1.AxisX.ScaleView.Zoomable = false;
                 chartArea1.AxisX.ScaleView.SizeType = DateTimeIntervalType.Number;
-
+                chartArea1.AxisX.ScaleView.SmallScrollMinSizeType = DateTimeIntervalType.Milliseconds;
                 chartArea1.AxisY.ScaleView.Zoomable = false;
                 chartArea1.AxisY.ScaleView.SizeType = DateTimeIntervalType.Number;
+                chartArea1.AxisY.ScaleView.SmallScrollMinSizeType = DateTimeIntervalType.Milliseconds;
 
                 /*chartArea1.AxisX.ScaleView.Zoom(position, size);*/
                 /*chartArea1.AxisY.ScaleView.Zoom(-5, 5);*/
@@ -685,7 +686,7 @@ namespace Project
                 chartArea1.AxisX.ScrollBar.ButtonStyle = ScrollBarButtonStyles.SmallScroll;
                 chartArea1.AxisY.ScrollBar.ButtonStyle = ScrollBarButtonStyles.SmallScroll;
 
-                chartArea1.AxisX.ScaleView.SmallScrollSize = 10;
+                
                 chartArea1.AxisX.ScrollBar.ButtonColor = Color.WhiteSmoke;
                 chartArea1.AxisX.ScrollBar.LineColor = Color.White;
                 chartArea1.AxisX.ScrollBar.IsPositionedInside = true;
@@ -693,7 +694,7 @@ namespace Project
                 chartArea1.CursorX.IsUserSelectionEnabled = true;
                 chartArea1.AxisX.LabelStyle.Format = "0";
 
-                chartArea1.AxisY.ScaleView.SmallScrollSize = 1;
+                
                 chartArea1.AxisY.ScrollBar.ButtonColor = Color.WhiteSmoke;
                 chartArea1.AxisY.ScrollBar.LineColor = Color.White;
                 chartArea1.AxisY.ScrollBar.IsPositionedInside = true;
