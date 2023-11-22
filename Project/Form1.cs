@@ -12,6 +12,7 @@ using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Channels;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -157,13 +158,12 @@ namespace Project
             }
             //display the timer for DFT
             this.timerDFT.Text = "DFT Timing: " + sw.ElapsedMilliseconds.ToString() + "ms";
-
-
-            for (int f = 1; f < A.Length; f++)
+            Series series = new Series("DFT");
+            for (int i = 0; i < A.Length; i++)
             {
-                freqChart.Series[0].Points.AddXY(f, (A[f]));
-            }
+                freqChart.Series[0].Points.AddXY(i, A[i]); 
 
+            }
             freqChart.Visible = true;
 
         }
@@ -171,26 +171,27 @@ namespace Project
         private double[] DFT(double[] s, int N)
         {
 
-            double real;
-            double imag;
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
             int n = s.Length < N ? s.Length : N;
             double[] A = new double[n];
-
+            double real = 0;
+            double imag = 0;
 
             for (int f = 0; f < n; f++)
             {
-                real = 0;
-                imag = 0;
-                A[f] = 0;
+                real = 0; imag = 0;
                 for (int t = 0; t < s.Length; t++)
                 {
-                    real += (s[t] * Math.Cos(2 * Math.PI * t * f * (N / n) / n));
-                    imag += (s[t] * Math.Sin(2 * Math.PI * t * f * (N / n) / n));
-
+                    real += (s[t] * Math.Cos(2 * Math.PI * f * t * (N / n) / n));
+                    imag += (-s[t] * Math.Sin(2 * Math.PI * f * t * (N / n) / n));
                 }
+                A[f] += Math.Sqrt((real*real) + (imag*imag)) / n;
 
-                A[f] = Math.Sqrt((real * real) + (imag * imag))/n;
             }
+            timer.Stop();
+            long elapsedTime = timer.ElapsedMilliseconds;
+            
             return A;
         }
 
@@ -305,9 +306,9 @@ namespace Project
                     for (int i = 0; i < audio16.Length; i++)
                     {
                         s[0][i] = audio16[i] / MaxValue16Bit;
-                        chart1.Series[0].Points.AddXY(i, s[0][i]);
+                        
                     }
-
+                    CreateAmplitudeChart(s[0], chart1);
 
 
                 } else if (channel == 2)
@@ -369,7 +370,7 @@ namespace Project
 
             for (int i = 0; i < data.Length; i++)
             {
-                short sample16Bit = (short)(factor * data[i]);
+                short sample16Bit = (short)((data[i]-128) * 256);
                 output[i] = sample16Bit;
             }
             return output;
@@ -573,11 +574,15 @@ namespace Project
                     selectedDataPoints.Add(point);
                 }
             }
+            
             selectedSamples = new double[selectedDataPoints.Count];
-            for (int i = 0; i < selectedDataPoints.Count; ++i)
+            int i = 0;
+            foreach(DataPoint points in selectedDataPoints)
             {
-                selectedSamples[i] = selectedDataPoints[i].YValues[0];
+                selectedSamples[i] = points.YValues[0];
+                i++;
             }
+            
 
             //Enable analyze buttons
             this.channel1AnalyzeBtn.Enabled = sender == chart1 && this.chart1.Series[0].Points.Count > 0 && this.selectedSamples.Length > 0;

@@ -651,13 +651,10 @@ namespace Project
         private void defineChartInfo(Chart chart, int flag)
         {
 
-
-
             var chartArea1 = chart.ChartAreas[0];
             if (flag == 1)
             {
-                int position = 0;
-                int size = 10;
+                
                 
                 var series = chart.Series[0];
                 chartArea1.AxisX.Title = "time";
