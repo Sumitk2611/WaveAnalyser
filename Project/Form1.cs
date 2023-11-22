@@ -29,7 +29,7 @@ namespace Project
             public uint dataLength;
         }
 
-        static bool isTriangleWindow = false;
+        bool isTriangleWindow = false;
 
         static string fileOpen;
         static int N;
@@ -92,9 +92,8 @@ namespace Project
 
         private void UpdateChart()
         {
-
             {
-                N = 100;
+                N = 1000;
                 int f = 1;
                 storedData = new double[1][];
                 storedData[0] = calculateSamples(f, N);
@@ -125,11 +124,11 @@ namespace Project
 
         private double[] calculateSamples(int f, int N)
         {
-            double[] s = new double[5 * N];
-            for (int t = 0; t < 5 * N; t++)
+            double[] s = new double[2 * N];
+            for (int t = 0; t < 2 * N; t++)
             {
-                s[t] = 10 * Math.Sin(2 * Math.PI * (t) * f / N + Math.PI / 2);
-                s[t] += 1 * Math.Sin(2 * Math.PI * (t) * 12 / N + Math.PI / 2);
+                s[t] =   Math.Cos(2 * Math.PI * (t) * f / N + Math.PI / 2);
+                s[t] += Math.Sin(2 * Math.PI * (t) * 25.5 / N + Math.PI / 2);
             }
             return s;
         }
@@ -182,13 +181,15 @@ namespace Project
             {
                 real = 0;
                 imag = 0;
+                A[f] = 0;
                 for (int t = 0; t < s.Length; t++)
                 {
-                    real += (s[t] * Math.Cos(2 * Math.PI * t * f * (N / n) / n)) / s.Length;
-                    imag += (-s[t] * Math.Sin(2 * Math.PI * t * f * (N / n) / n)) / s.Length;
+                    real += (s[t] * Math.Cos(2 * Math.PI * t * f * (N / n) / n));
+                    imag += (s[t] * Math.Sin(2 * Math.PI * t * f * (N / n) / n));
 
                 }
-                A[f] = Math.Sqrt((real * real) + (imag * imag));
+
+                A[f] = Math.Sqrt((real * real) + (imag * imag))/n;
             }
             return A;
         }
@@ -806,9 +807,27 @@ namespace Project
             string doubleArrayAsString = Clipboard.GetText();
             string[] stringValues = doubleArrayAsString.Split(',');
             double[] s = Array.ConvertAll(stringValues, double.Parse);
-            double[] samples = new double[s.Length + chart.Series[0].Points.Count];
+            double[] samples = new double[s.Length + chart.Series[0].Points.Count - selectedSamples.Length];
             double lastXvalue = chart.Series[0].Points.Count - 1;
             int counter = 0;
+
+            Series chartsamples = chart.Series[0];
+            int pointsRemoved = (int)(endX - startX);
+            double[] newSamples = new double[chartsamples.Points.Count - pointsRemoved];
+
+            //remove the other samples
+            int cutCounter = 0;
+            for (int t = 0; t < chartsamples.Points.Count; ++t)
+            {
+                if (t >= startX && t <= endX)
+                {
+                    cutCounter++;
+                    continue;
+                }
+
+                newSamples[t - cutCounter] = chartsamples.Points[t].YValues[0];
+            }
+
             for (int t = 0; t < samples.Length; t++)
             {
                 if (t == startX)
@@ -818,7 +837,7 @@ namespace Project
                         samples[t] = s[i];
                     }
                 }
-                samples[t] = chart.Series[0].Points[counter].YValues[0];
+                samples[t] = newSamples[counter];
                 counter++;
             }
             CreateAmplitudeChart(samples, chart);
@@ -1012,7 +1031,8 @@ namespace Project
             else
             {
                 this.WindowOnToggle.Text = "On";
-                isTriangleWindow = true;
+                isTriangleWindow = false;
+                this.windowingStatus.Text = "Windowing: OFF";
             }
 
         }
@@ -1119,15 +1139,8 @@ namespace Project
         {
 
             int numThreads = 4;
-            int[] chunkIndx = new int[numThreads];
-
-
+            
             Thread[] threads = new Thread[numThreads];
-            for (int i = 0; i < numThreads; i++)
-            {
-                chunkIndx[i] = i;
-
-            }
             double[][] chunks = new double[numThreads][];
 
             Mutex mutex = new Mutex();
@@ -1136,6 +1149,7 @@ namespace Project
             {
                 int curIndx = i;
                 int chunkSize = i == numThreads - 1 ? s.Length - (s.Length / numThreads * curIndx) : s.Length / numThreads;
+                //creates the chunks
                 chunkSize = chunkSize < N / numThreads ? chunkSize : N / numThreads;
                 if (i == (numThreads - 1))
                 {
@@ -1152,7 +1166,7 @@ namespace Project
 
                 threads[i] = new Thread(() =>
                 {
-                    double[] result = DFTforThreads(s, N, chunkSize, chunkIndx[curIndx]);
+                    double[] result = DFTforThreads(s, N, chunkSize, curIndx);
 
                     // Use mutex to safely update the chunks array
                     mutex.WaitOne();
@@ -1274,8 +1288,6 @@ namespace Project
             e.Handled = true;
         
         }
-
-
 
 
     }
