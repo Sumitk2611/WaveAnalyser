@@ -94,7 +94,7 @@ namespace Project
         private void UpdateChart()
         {
             {
-                N = 1000;
+                N = 100;
                 int f = 1;
                 storedData = new double[1][];
                 storedData[0] = calculateSamples(f, N);
@@ -129,7 +129,7 @@ namespace Project
             for (int t = 0; t < 2 * N; t++)
             {
                 s[t] =   Math.Cos(2 * Math.PI * (t) * f / N + Math.PI / 2);
-                s[t] += Math.Sin(2 * Math.PI * (t) * 25.5 / N + Math.PI / 2);
+                s[t] += Math.Sin(2 * Math.PI * (t) * 25 / N + Math.PI / 2);
             }
             return s;
         }
@@ -592,13 +592,32 @@ namespace Project
         private void channel1AnalyzeBtn_Click(object sender, EventArgs e)
         {
             chart2.Series[0].Points.Clear();
-            CreateFreqChart(selectedSamples, N, chart2);
+            if (isTriangleWindow)
+            {
+                double[] windowedSamples = ApplyTriangleWindow(selectedSamples);
+                
+                CreateFreqChart(windowedSamples, N, chart2);
+            }
+            else
+            {
+                CreateFreqChart(selectedSamples, N, chart2);
+            }
+            
         }
 
         private void channel2AnalyzeBtn_Click(object sender, EventArgs e)
         {
             chart4.Series[0].Points.Clear();
-            CreateFreqChart(selectedSamples, N, chart4);
+            
+            if (isTriangleWindow)
+            {
+                double[] windowedSamples = ApplyTriangleWindow(selectedSamples);
+                CreateFreqChart(windowedSamples, N, chart4);
+            }
+            else
+            {
+                CreateFreqChart(selectedSamples, N, chart4);
+            }
         }
 
 
@@ -957,15 +976,7 @@ namespace Project
             if (sentFilterReq == chart2)
             {
                 CreateAmplitudeChart(storedData[0], chart1);
-                if (isTriangleWindow)
-                {
-                    double[] windowedSamples = ApplyTriangleWindow(selectedSamples);
-                    CreateFreqChart(windowedSamples, N, chart2);
-                } else
-                {
-                    CreateFreqChart(selectedSamples, N, chart2);
-                }
-
+                CreateFreqChart(selectedSamples, N, chart2);
             }
             else
             {
