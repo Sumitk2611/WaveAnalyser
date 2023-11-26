@@ -32,6 +32,7 @@ namespace Project
 
         bool isTriangleWindow = false;
         bool isGaussianWindow = false;
+        bool isSineWindow = false;
 
         static string fileOpen;
         static int N;
@@ -79,6 +80,11 @@ namespace Project
         }
 
 
+        /// <summary>
+        /// Creates Time-Domain Chart
+        /// </summary>
+        /// <param name="s">samples to plot</param>
+        /// <param name="chart">the chart to plot in</param>
         private void CreateAmplitudeChart(double[] s, Chart chart)
         {
             chart.Series[0].Points.Clear();
@@ -91,7 +97,9 @@ namespace Project
 
         }
 
-
+        /// <summary>
+        /// Prints out dummy data
+        /// </summary>
         private void UpdateChart()
         {
             {
@@ -109,6 +117,9 @@ namespace Project
 
         }
 
+        /// <summary>
+        /// Resets the Chart to Zeros
+        /// </summary>
         private void displayDefault()
         {
             chart1.Series[0].Points.AddXY(0, 0);
@@ -124,6 +135,12 @@ namespace Project
             this.sampleRate44100Btn.Checked = sampleRateFlag44100;
         }
 
+        /// <summary>
+        /// Calculates Dummy Data
+        /// </summary>
+        /// <param name="f">freq</param>
+        /// <param name="N">Sampling Rate</param>
+        /// <returns>the dummy data samples</returns>
         private double[] calculateSamples(int f, int N)
         {
             double[] s = new double[2 * N];
@@ -135,6 +152,12 @@ namespace Project
             return s;
         }
 
+        /// <summary>
+        /// Create a frequency Domain Chart
+        /// </summary>
+        /// <param name="s">Samples to convert to freq-domain</param>
+        /// <param name="N">Sampling Rate</param>
+        /// <param name="freqChart">Chart to plot on</param>
         private void CreateFreqChart(double[] s, int N, Chart freqChart)
         {
             freqChart.Series[0].Points.Clear();
@@ -169,6 +192,12 @@ namespace Project
 
         }
 
+        /// <summary>
+        /// DFT Function
+        /// </summary>
+        /// <param name="s">samples to perform DFT on</param>
+        /// <param name="N">sampling rate</param>
+        /// <returns>Values after performing DFT on</returns>
         private double[] DFT(double[] s, int N)
         {
 
@@ -195,8 +224,12 @@ namespace Project
             
             return A;
         }
-
-
+           
+        /// <summary>
+        /// Dummy Data Display
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void startbutton_click(object sender, EventArgs e)
         {
             ClearChart();
@@ -204,6 +237,9 @@ namespace Project
             setStatusStrip();
         }
 
+        /// <summary>
+        /// Removes all data from the chart
+        /// </summary>
         private void ClearChart()
         {
             chart1.Series[0].Points.Clear();
@@ -211,6 +247,12 @@ namespace Project
             chart3.Series[0].Points.Clear();
 
         }
+
+        /// <summary>
+        /// Makes chart Zoomable
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void makeChartZoomable(object sender, MouseEventArgs e)
         {
             Chart chart = (Chart)sender;
@@ -237,14 +279,21 @@ namespace Project
             }
         }
 
+        /// <summary>
+        /// Opens a new window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void newWindowBtn_Click(object sender, EventArgs e)
         {
             WaveAnalyzer form1 = new WaveAnalyzer();
             form1.Show();
         }
 
-
-
+        /// <summary>
+        /// Function to read an wav file
+        /// </summary>
+        /// <param name="filename">file to read</param>
         private void readFile(string filename)
         {
 
@@ -299,7 +348,6 @@ namespace Project
                         chart4.Visible = false;
                     }
 
-
                 }
 
                 if (channel == 1)
@@ -323,7 +371,6 @@ namespace Project
                     }
 
 
-
                 }
                 storedData = s;
                 setStatusStrip();
@@ -332,6 +379,11 @@ namespace Project
 
         }
 
+        /// <summary>
+        /// Reads a stereo file
+        /// </summary>
+        /// <param name="audio16">the audio read from</param>
+        /// <returns>demuxed stereo</returns>
         double[][] readstereo(short[] audio16)
         {
             int leftCounter = 0;
@@ -358,7 +410,11 @@ namespace Project
             return s;
         }
 
-
+        /// <summary>
+        /// Convert 8 bit data to 16 bit
+        /// </summary>
+        /// <param name="data">data to convert</param>
+        /// <returns>converted array</returns>
         short[] Convert8BitTo16Bit(byte[] data)
         {
             int max8BitValue = 255; // Maximum value for 8-bit audio
@@ -377,6 +433,11 @@ namespace Project
             return output;
         }
 
+        /// <summary>
+        /// Opens file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void openFileBtn_Click(object sender, EventArgs e)
         {
             string selectedFilePath = null;
@@ -394,6 +455,12 @@ namespace Project
             fileOpen = selectedFilePath;
         }
 
+        /// <summary>
+        /// Function to write the headers of the file
+        /// and the contents
+        /// </summary>
+        /// <param name="filePath">path of file to write in</param>
+        /// <param name="audio">data to write</param>
         private void writeFile(string filePath, double[][] audio)
         {
             byte[] audioData;
@@ -444,6 +511,11 @@ namespace Project
             }
         }
 
+        /// <summary>
+        /// Function to convert Double array to Byte array (8-bit)
+        /// </summary>
+        /// <param name="doubleSamples">array to convert</param>
+        /// <returns>byte array</returns>
         static byte[] ConvertDoubleArrayToByteArray8bit(double[] doubleSamples)
         {
             // Create a byte array with enough capacity to store all the double values
@@ -465,6 +537,11 @@ namespace Project
             return byteArray;
         }
 
+        /// <summary>
+        /// Convert Double array to byte array (16-bit)
+        /// </summary>
+        /// <param name="doubleSamples">samples to convert</param>
+        /// <returns>byte array</returns>
         static byte[] ConvertDoubleArrayToByteArray(double[] doubleSamples)
         {
             // Create a byte array with enough capacity to store all the double values
@@ -481,6 +558,12 @@ namespace Project
             return byteSamples;
         }
 
+        /// <summary>
+        /// Function to multiplex a stereo file
+        /// </summary>
+        /// <param name="leftChannel">channel to multiplex</param>
+        /// <param name="rightChannel">channel to multiplex with</param>
+        /// <returns>multiplexed values</returns>
         static double[] InterleaveStereoAudio(double[] leftChannel, double[] rightChannel)
         {
             int numSamples = Math.Max(leftChannel.Length, rightChannel.Length) / 2;
@@ -517,7 +600,9 @@ namespace Project
             SaveFile();
 
         }
-
+        /// <summary>
+        /// Opens the dialog box
+        /// </summary>
         private void SaveFile()
         {
             if (storedData.Length != 0)
@@ -593,37 +678,59 @@ namespace Project
         private void channel1AnalyzeBtn_Click(object sender, EventArgs e)
         {
             chart2.Series[0].Points.Clear();
+            double[] window;
+            //If triangle Window active
             if (isTriangleWindow)
             {
-                double[] windowedSamples = ApplyTriangleWindow(selectedSamples);
+                window = CreateTriangleWindow(selectedSamples.Length);
                 
-                CreateFreqChart(windowedSamples, N, chart2);
             }
             else if (isGaussianWindow)
             {
-                double[] gaussianSample = ApplyGaussianWindow(selectedSamples);
-                CreateFreqChart(gaussianSample, N, chart2);
+                //Gaussian Window active
+                window = CreateGaussianWindow(selectedSamples.Length,10);
+            }
+            else if (isSineWindow)
+            {
+                //Sine window active
+                window = CreateSineWindow(selectedSamples.Length);
             }
             else
             {
-                CreateFreqChart(selectedSamples, N, chart2);
+                //Default - Rectangle Window
+                window = CreateRectangleWindow(selectedSamples.Length);
             }
-            
+            double[] windowedSamples = ApplyWindow(selectedSamples, window);
+            CreateFreqChart(windowedSamples, N, chart2);
+
         }
 
         private void channel2AnalyzeBtn_Click(object sender, EventArgs e)
         {
             chart4.Series[0].Points.Clear();
-            
+
+            double[] window;
             if (isTriangleWindow)
             {
-                double[] windowedSamples = ApplyTriangleWindow(selectedSamples);
-                CreateFreqChart(windowedSamples, N, chart4);
+                window = CreateTriangleWindow(selectedSamples.Length);
+
+            }
+            else if (isGaussianWindow)
+            {
+                window = CreateGaussianWindow(selectedSamples.Length, 10);
+            }
+            else if (isSineWindow)
+            {
+
+                window = CreateSineWindow(selectedSamples.Length);
             }
             else
             {
-                CreateFreqChart(selectedSamples, N, chart4);
+                window = CreateRectangleWindow(selectedSamples.Length);
             }
+            double[] windowedSamples = ApplyWindow(selectedSamples, window);
+            CreateFreqChart(windowedSamples, N, chart4);
+
         }
 
 
@@ -1047,8 +1154,10 @@ namespace Project
             if (!isTriangleWindow)
             {
                 isGaussianWindow = false;
+                isSineWindow = false;
                 this.WindowOnToggle.Text = "Off";
                 this.GaussianToolStrip.Text = "On";
+                this.sinWaveOn.Text = "On";
                 isTriangleWindow = true;
                 this.windowingStatus.Text = "Windowing:Triangle";
             }
@@ -1139,18 +1248,17 @@ namespace Project
         /// </summary>
         /// <param name="samples">samples to apply windowing too</param>
         /// <returns>windowed samples</returns>
-        static double[] ApplyTriangleWindow(double[] samples)
+        static double[] CreateTriangleWindow(int size)
         {
-            int N = samples.Length;
-            double[] windowedSamples = new double[N];
+            int N = size;
+            double[] windowed = new double[N];
 
             for (int n = 0; n < N; n++)
             {
-                double value = samples[n] * (1.0 - Math.Abs((n - (N / 2.0)) / (N / 2.0)));
-                windowedSamples[n] = value;
+                windowed[n] =(1.0 - Math.Abs((n - (N / 2.0)) / (N / 2.0)));
             }
 
-            return windowedSamples;
+            return windowed;
         }
 
         /// <summary>
@@ -1221,13 +1329,20 @@ namespace Project
             return A;
         }
 
+        /// <summary>
+        /// Gaussian Window Toggle Button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void oFFToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!isGaussianWindow)
             {
                 isTriangleWindow = false;
+                isSineWindow = false;
                 this.WindowOnToggle.Text = "On";
                 this.GaussianToolStrip.Text = "Off";
+                this.sinWaveOn.Text = "On";
                 isGaussianWindow = true;
                 this.windowingStatus.Text = "Windowing:Gaussian";
             }
@@ -1238,6 +1353,31 @@ namespace Project
                 this.windowingStatus.Text = "Windowing: Rectangle";
             }
 
+        }
+
+        /// <summary>
+        /// Sine Window Toggle Button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!isSineWindow)
+            {
+                isTriangleWindow = false;
+                isGaussianWindow = false;
+                this.sinWaveOn.Text = "Off";
+                this.GaussianToolStrip.Text = "On";
+                this.WindowOnToggle.Text = "On";
+                isSineWindow = true;
+                this.windowingStatus.Text = "Windowing: Sine";
+            }
+            else
+            {
+                this.sinWaveOn.Text = "On";
+                isSineWindow = false;
+                this.windowingStatus.Text = "Windowing: Rectangle";
+            }
         }
 
         /// <summary>
@@ -1273,6 +1413,11 @@ namespace Project
             return A;
         }
 
+        /// <summary>
+        /// Shortcuts from Keyboard
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
             
@@ -1332,6 +1477,12 @@ namespace Project
         
         }
 
+        /// <summary>
+        /// Create the Gaussian Window
+        /// </summary>
+        /// <param name="size">size of the window</param>
+        /// <param name="sigma">sigma val</param>
+        /// <returns></returns>
         static double[] CreateGaussianWindow(int size, double sigma)
         {
             double[] window = new double[size];
@@ -1355,9 +1506,47 @@ namespace Project
             return window;
         }
 
-        static double[] ApplyGaussianWindow(double[] samples)
+        /// <summary>
+        /// Create The sine Window
+        /// </summary>
+        /// <param name="size">size of the window</param>
+        /// <returns></returns>
+        static double[] CreateSineWindow(int size)
         {
-            double[] window = CreateGaussianWindow(samples.Length, 10);
+            double[] window = new double[size];
+
+            for (int i = 0; i < size; i++)
+            {
+                window[i] = Math.Sin(Math.PI * i / (size - 1));
+            }
+
+            return window;
+        }
+
+        /// <summary>
+        /// Create the default Window
+        /// </summary>
+        /// <param name="size">size of the window</param>
+        /// <returns></returns>
+        static double[] CreateRectangleWindow(int size)
+        {
+            double[] window = new double[size];
+            for (int i = 0; i < size; i++)
+            {
+                window[i] = 1;
+            }
+            return window;
+        }
+        
+        /// <summary>
+        /// Converts the samples using the right window
+        /// </summary>
+        /// <param name="samples">samples to convert</param>
+        /// <param name="window">Window to apply it to</param>
+        /// <returns>windowed samples</returns>
+        static double[] ApplyWindow(double[]samples,  double[] window)
+        {
+            
             int length = Math.Min(samples.Length, window.Length);
             double[] result = new double[length];
 

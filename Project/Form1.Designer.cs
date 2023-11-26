@@ -98,6 +98,8 @@ namespace Project
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+            this.sineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sinWaveOn = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart3)).BeginInit();
@@ -423,7 +425,8 @@ namespace Project
             // 
             this.windowingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.triangleToolStripMenuItem,
-            this.gaussianToolStripMenuItem});
+            this.gaussianToolStripMenuItem,
+            this.sineToolStripMenuItem});
             this.windowingToolStripMenuItem.Name = "windowingToolStripMenuItem";
             this.windowingToolStripMenuItem.Size = new System.Drawing.Size(119, 29);
             this.windowingToolStripMenuItem.Text = "Windowing";
@@ -433,13 +436,13 @@ namespace Project
             this.triangleToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.WindowOnToggle});
             this.triangleToolStripMenuItem.Name = "triangleToolStripMenuItem";
-            this.triangleToolStripMenuItem.Size = new System.Drawing.Size(184, 34);
+            this.triangleToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.triangleToolStripMenuItem.Text = "Triangle";
             // 
             // WindowOnToggle
             // 
             this.WindowOnToggle.Name = "WindowOnToggle";
-            this.WindowOnToggle.Size = new System.Drawing.Size(138, 34);
+            this.WindowOnToggle.Size = new System.Drawing.Size(270, 34);
             this.WindowOnToggle.Text = "On";
             this.WindowOnToggle.Click += new System.EventHandler(this.WindowOnToggle_Click);
             // 
@@ -448,13 +451,13 @@ namespace Project
             this.gaussianToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.GaussianToolStrip});
             this.gaussianToolStripMenuItem.Name = "gaussianToolStripMenuItem";
-            this.gaussianToolStripMenuItem.Size = new System.Drawing.Size(184, 34);
+            this.gaussianToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.gaussianToolStripMenuItem.Text = "Gaussian";
             // 
             // GaussianToolStrip
             // 
             this.GaussianToolStrip.Name = "GaussianToolStrip";
-            this.GaussianToolStrip.Size = new System.Drawing.Size(138, 34);
+            this.GaussianToolStrip.Size = new System.Drawing.Size(270, 34);
             this.GaussianToolStrip.Text = "On";
             this.GaussianToolStrip.Click += new System.EventHandler(this.oFFToolStripMenuItem_Click);
             // 
@@ -634,6 +637,21 @@ namespace Project
             this.tableLayoutPanel6.Size = new System.Drawing.Size(1176, 262);
             this.tableLayoutPanel6.TabIndex = 0;
             // 
+            // sineToolStripMenuItem
+            // 
+            this.sineToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.sinWaveOn});
+            this.sineToolStripMenuItem.Name = "sineToolStripMenuItem";
+            this.sineToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.sineToolStripMenuItem.Text = "Sine";
+            // 
+            // sinWaveOn
+            // 
+            this.sinWaveOn.Name = "sinWaveOn";
+            this.sinWaveOn.Size = new System.Drawing.Size(270, 34);
+            this.sinWaveOn.Text = "On";
+            this.sinWaveOn.Click += new System.EventHandler(this.onToolStripMenuItem_Click);
+            // 
             // WaveAnalyzer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -808,6 +826,8 @@ namespace Project
         private ToolStripStatusLabel windowingStatus;
         private ToolStripMenuItem gaussianToolStripMenuItem;
         private ToolStripMenuItem GaussianToolStrip;
+        private ToolStripMenuItem sineToolStripMenuItem;
+        private ToolStripMenuItem sinWaveOn;
     }
 
     
