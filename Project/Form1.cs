@@ -31,6 +31,7 @@ namespace Project
         }
 
         bool isTriangleWindow = false;
+        bool isGaussianWindow = false;
 
         static string fileOpen;
         static int N;
@@ -598,6 +599,11 @@ namespace Project
                 
                 CreateFreqChart(windowedSamples, N, chart2);
             }
+            else if (isGaussianWindow)
+            {
+                double[] gaussianSample = ApplyGaussianWindow(selectedSamples);
+                CreateFreqChart(gaussianSample, N, chart2);
+            }
             else
             {
                 CreateFreqChart(selectedSamples, N, chart2);
@@ -1040,7 +1046,9 @@ namespace Project
         {
             if (!isTriangleWindow)
             {
+                isGaussianWindow = false;
                 this.WindowOnToggle.Text = "Off";
+                this.GaussianToolStrip.Text = "On";
                 isTriangleWindow = true;
                 this.windowingStatus.Text = "Windowing:Triangle";
             }
@@ -1213,6 +1221,25 @@ namespace Project
             return A;
         }
 
+        private void oFFToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!isGaussianWindow)
+            {
+                isTriangleWindow = false;
+                this.WindowOnToggle.Text = "On";
+                this.GaussianToolStrip.Text = "Off";
+                isGaussianWindow = true;
+                this.windowingStatus.Text = "Windowing:Gaussian";
+            }
+            else
+            {
+                this.GaussianToolStrip.Text = "On";
+                isTriangleWindow = false;
+                this.windowingStatus.Text = "Windowing: Rectangle";
+            }
+
+        }
+
         /// <summary>
         /// Thread Proc for DFT
         /// </summary>
@@ -1303,6 +1330,43 @@ namespace Project
             // Prevent further processing of the Ctrl+S key combination
             e.Handled = true;
         
+        }
+
+        static double[] CreateGaussianWindow(int size, double sigma)
+        {
+            double[] window = new double[size];
+            double sum = 0.0;
+
+            int halfSize = size / 2;
+            for (int i = -halfSize; i < halfSize; i++)
+            {
+                double x = i / sigma;
+                double value = Math.Exp(-0.5 * (x * x));
+                window[i + halfSize] = value;
+                sum += value;
+            }
+
+            // Normalize the window to make sure the sum is 1
+            for (int i = 0; i < size; i++)
+            {
+                window[i] /= sum;
+            }
+
+            return window;
+        }
+
+        static double[] ApplyGaussianWindow(double[] samples)
+        {
+            double[] window = CreateGaussianWindow(samples.Length, 10);
+            int length = Math.Min(samples.Length, window.Length);
+            double[] result = new double[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                result[i] = samples[i] * window[i];
+            }
+
+            return result;
         }
 
 

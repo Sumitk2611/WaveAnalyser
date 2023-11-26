@@ -81,6 +81,8 @@ namespace Project
             this.windowingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.triangleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.WindowOnToggle = new System.Windows.Forms.ToolStripMenuItem();
+            this.gaussianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.GaussianToolStrip = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.recordBtn = new System.Windows.Forms.Button();
             this.playBtn = new System.Windows.Forms.Button();
@@ -420,7 +422,8 @@ namespace Project
             // windowingToolStripMenuItem
             // 
             this.windowingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.triangleToolStripMenuItem});
+            this.triangleToolStripMenuItem,
+            this.gaussianToolStripMenuItem});
             this.windowingToolStripMenuItem.Name = "windowingToolStripMenuItem";
             this.windowingToolStripMenuItem.Size = new System.Drawing.Size(119, 29);
             this.windowingToolStripMenuItem.Text = "Windowing";
@@ -430,15 +433,30 @@ namespace Project
             this.triangleToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.WindowOnToggle});
             this.triangleToolStripMenuItem.Name = "triangleToolStripMenuItem";
-            this.triangleToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.triangleToolStripMenuItem.Size = new System.Drawing.Size(184, 34);
             this.triangleToolStripMenuItem.Text = "Triangle";
             // 
             // WindowOnToggle
             // 
             this.WindowOnToggle.Name = "WindowOnToggle";
-            this.WindowOnToggle.Size = new System.Drawing.Size(270, 34);
+            this.WindowOnToggle.Size = new System.Drawing.Size(138, 34);
             this.WindowOnToggle.Text = "On";
             this.WindowOnToggle.Click += new System.EventHandler(this.WindowOnToggle_Click);
+            // 
+            // gaussianToolStripMenuItem
+            // 
+            this.gaussianToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.GaussianToolStrip});
+            this.gaussianToolStripMenuItem.Name = "gaussianToolStripMenuItem";
+            this.gaussianToolStripMenuItem.Size = new System.Drawing.Size(184, 34);
+            this.gaussianToolStripMenuItem.Text = "Gaussian";
+            // 
+            // GaussianToolStrip
+            // 
+            this.GaussianToolStrip.Name = "GaussianToolStrip";
+            this.GaussianToolStrip.Size = new System.Drawing.Size(138, 34);
+            this.GaussianToolStrip.Text = "On";
+            this.GaussianToolStrip.Click += new System.EventHandler(this.oFFToolStripMenuItem_Click);
             // 
             // flowLayoutPanel1
             // 
@@ -558,8 +576,8 @@ namespace Project
             // windowingStatus
             // 
             this.windowingStatus.Name = "windowingStatus";
-            this.windowingStatus.Size = new System.Drawing.Size(144, 33);
-            this.windowingStatus.Text = "Windowing: OFF";
+            this.windowingStatus.Size = new System.Drawing.Size(188, 33);
+            this.windowingStatus.Text = "Windowing: Rectangle";
             // 
             // tableLayoutPanel4
             // 
@@ -788,6 +806,8 @@ namespace Project
         private Button threadingToggle;
         private ToolStripStatusLabel timerDFT;
         private ToolStripStatusLabel windowingStatus;
+        private ToolStripMenuItem gaussianToolStripMenuItem;
+        private ToolStripMenuItem GaussianToolStrip;
     }
 
     
