@@ -950,13 +950,13 @@ namespace Project
 
             Series chartsamples = chart.Series[0];
             int pointsRemoved = (int)(endX - startX);
-            double[] newSamples = new double[chartsamples.Points.Count - pointsRemoved];
+            double[] newSamples = new double[chartsamples.Points.Count - pointsRemoved + 1];
 
             //remove the other samples
             int cutCounter = 0;
             for (int t = 0; t < chartsamples.Points.Count; ++t)
             {
-                if (t >= startX && t <= endX)
+                if (t > startX && t < endX)
                 {
                     cutCounter++;
                     continue;

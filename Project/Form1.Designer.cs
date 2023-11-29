@@ -83,6 +83,8 @@ namespace Project
             this.WindowOnToggle = new System.Windows.Forms.ToolStripMenuItem();
             this.gaussianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.GaussianToolStrip = new System.Windows.Forms.ToolStripMenuItem();
+            this.sineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sinWaveOn = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.recordBtn = new System.Windows.Forms.Button();
             this.playBtn = new System.Windows.Forms.Button();
@@ -98,8 +100,6 @@ namespace Project
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
-            this.sineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sinWaveOn = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart3)).BeginInit();
@@ -128,7 +128,7 @@ namespace Project
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(1174, 258);
+            this.chart1.Size = new System.Drawing.Size(1174, 257);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
             // 
@@ -148,7 +148,7 @@ namespace Project
             series2.Legend = "Legend1";
             series2.Name = "Sound Wave";
             this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(582, 254);
+            this.chart2.Size = new System.Drawing.Size(582, 253);
             this.chart2.TabIndex = 1;
             this.chart2.Text = "chart2";
             // 
@@ -159,7 +159,7 @@ namespace Project
             this.chart3.Dock = System.Windows.Forms.DockStyle.Fill;
             legend3.Name = "Legend1";
             this.chart3.Legends.Add(legend3);
-            this.chart3.Location = new System.Drawing.Point(3, 534);
+            this.chart3.Location = new System.Drawing.Point(3, 532);
             this.chart3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.chart3.Name = "chart3";
             series3.ChartArea = "ChartArea1";
@@ -168,7 +168,7 @@ namespace Project
             series3.Legend = "Legend1";
             series3.Name = "Series1";
             this.chart3.Series.Add(series3);
-            this.chart3.Size = new System.Drawing.Size(1174, 262);
+            this.chart3.Size = new System.Drawing.Size(1174, 261);
             this.chart3.TabIndex = 3;
             this.chart3.Text = "chart3";
             // 
@@ -199,7 +199,7 @@ namespace Project
             series4.Legend = "Legend1";
             series4.Name = "Series1";
             this.chart4.Series.Add(series4);
-            this.chart4.Size = new System.Drawing.Size(582, 254);
+            this.chart4.Size = new System.Drawing.Size(582, 253);
             this.chart4.TabIndex = 7;
             this.chart4.Text = "chart4";
             // 
@@ -219,7 +219,7 @@ namespace Project
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1184, 33);
+            this.menuStrip1.Size = new System.Drawing.Size(1184, 36);
             this.menuStrip1.TabIndex = 12;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -229,7 +229,7 @@ namespace Project
             this.newWindowBtn,
             this.exitBtn});
             this.waveAnalyzerToolStripMenuItem.Name = "waveAnalyzerToolStripMenuItem";
-            this.waveAnalyzerToolStripMenuItem.Size = new System.Drawing.Size(138, 29);
+            this.waveAnalyzerToolStripMenuItem.Size = new System.Drawing.Size(138, 32);
             this.waveAnalyzerToolStripMenuItem.Text = "WaveAnalyzer";
             // 
             // newWindowBtn
@@ -252,7 +252,7 @@ namespace Project
             this.openFileBtn,
             this.saveFileBtn});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(54, 29);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(54, 32);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openFileBtn
@@ -275,7 +275,7 @@ namespace Project
             this.sampleSizeMenu,
             this.sampleRateMenu});
             this.recordToolStripMenuItem.Name = "recordToolStripMenuItem";
-            this.recordToolStripMenuItem.Size = new System.Drawing.Size(98, 29);
+            this.recordToolStripMenuItem.Size = new System.Drawing.Size(98, 32);
             this.recordToolStripMenuItem.Text = "Recorder";
             // 
             // sampleSizeMenu
@@ -340,7 +340,7 @@ namespace Project
             this.analyseToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.analyseToolStripMenuItem1});
             this.analyseToolStripMenuItem.Name = "analyseToolStripMenuItem";
-            this.analyseToolStripMenuItem.Size = new System.Drawing.Size(89, 29);
+            this.analyseToolStripMenuItem.Size = new System.Drawing.Size(89, 32);
             this.analyseToolStripMenuItem.Text = "Analyse";
             // 
             // analyseToolStripMenuItem1
@@ -349,14 +349,14 @@ namespace Project
             this.channel1AnalyzeBtn,
             this.channel2AnalyzeBtn});
             this.analyseToolStripMenuItem1.Name = "analyseToolStripMenuItem1";
-            this.analyseToolStripMenuItem1.Size = new System.Drawing.Size(270, 34);
+            this.analyseToolStripMenuItem1.Size = new System.Drawing.Size(145, 34);
             this.analyseToolStripMenuItem1.Text = "DFT";
             // 
             // channel1AnalyzeBtn
             // 
             this.channel1AnalyzeBtn.Enabled = false;
             this.channel1AnalyzeBtn.Name = "channel1AnalyzeBtn";
-            this.channel1AnalyzeBtn.Size = new System.Drawing.Size(270, 34);
+            this.channel1AnalyzeBtn.Size = new System.Drawing.Size(192, 34);
             this.channel1AnalyzeBtn.Text = "Channel 1";
             this.channel1AnalyzeBtn.Click += new System.EventHandler(this.channel1AnalyzeBtn_Click);
             // 
@@ -364,7 +364,7 @@ namespace Project
             // 
             this.channel2AnalyzeBtn.Enabled = false;
             this.channel2AnalyzeBtn.Name = "channel2AnalyzeBtn";
-            this.channel2AnalyzeBtn.Size = new System.Drawing.Size(270, 34);
+            this.channel2AnalyzeBtn.Size = new System.Drawing.Size(192, 34);
             this.channel2AnalyzeBtn.Text = "Channel 2";
             this.channel2AnalyzeBtn.Click += new System.EventHandler(this.channel2AnalyzeBtn_Click);
             // 
@@ -374,7 +374,7 @@ namespace Project
             this.cutChart1,
             this.cutChart2});
             this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
-            this.cutToolStripMenuItem.Size = new System.Drawing.Size(55, 29);
+            this.cutToolStripMenuItem.Size = new System.Drawing.Size(55, 32);
             this.cutToolStripMenuItem.Text = "Cut";
             // 
             // cutChart1
@@ -394,7 +394,7 @@ namespace Project
             // copyToolStripMenuItem
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(70, 29);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(70, 32);
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
@@ -404,7 +404,7 @@ namespace Project
             this.pasteToChart1,
             this.pasteToChart2});
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(69, 29);
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(69, 32);
             this.pasteToolStripMenuItem.Text = "Paste";
             // 
             // pasteToChart1
@@ -428,7 +428,7 @@ namespace Project
             this.gaussianToolStripMenuItem,
             this.sineToolStripMenuItem});
             this.windowingToolStripMenuItem.Name = "windowingToolStripMenuItem";
-            this.windowingToolStripMenuItem.Size = new System.Drawing.Size(119, 29);
+            this.windowingToolStripMenuItem.Size = new System.Drawing.Size(119, 32);
             this.windowingToolStripMenuItem.Text = "Windowing";
             // 
             // triangleToolStripMenuItem
@@ -436,13 +436,13 @@ namespace Project
             this.triangleToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.WindowOnToggle});
             this.triangleToolStripMenuItem.Name = "triangleToolStripMenuItem";
-            this.triangleToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.triangleToolStripMenuItem.Size = new System.Drawing.Size(184, 34);
             this.triangleToolStripMenuItem.Text = "Triangle";
             // 
             // WindowOnToggle
             // 
             this.WindowOnToggle.Name = "WindowOnToggle";
-            this.WindowOnToggle.Size = new System.Drawing.Size(270, 34);
+            this.WindowOnToggle.Size = new System.Drawing.Size(138, 34);
             this.WindowOnToggle.Text = "On";
             this.WindowOnToggle.Click += new System.EventHandler(this.WindowOnToggle_Click);
             // 
@@ -451,15 +451,30 @@ namespace Project
             this.gaussianToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.GaussianToolStrip});
             this.gaussianToolStripMenuItem.Name = "gaussianToolStripMenuItem";
-            this.gaussianToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.gaussianToolStripMenuItem.Size = new System.Drawing.Size(184, 34);
             this.gaussianToolStripMenuItem.Text = "Gaussian";
             // 
             // GaussianToolStrip
             // 
             this.GaussianToolStrip.Name = "GaussianToolStrip";
-            this.GaussianToolStrip.Size = new System.Drawing.Size(270, 34);
+            this.GaussianToolStrip.Size = new System.Drawing.Size(138, 34);
             this.GaussianToolStrip.Text = "On";
             this.GaussianToolStrip.Click += new System.EventHandler(this.oFFToolStripMenuItem_Click);
+            // 
+            // sineToolStripMenuItem
+            // 
+            this.sineToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.sinWaveOn});
+            this.sineToolStripMenuItem.Name = "sineToolStripMenuItem";
+            this.sineToolStripMenuItem.Size = new System.Drawing.Size(184, 34);
+            this.sineToolStripMenuItem.Text = "Sine";
+            // 
+            // sinWaveOn
+            // 
+            this.sinWaveOn.Name = "sinWaveOn";
+            this.sinWaveOn.Size = new System.Drawing.Size(138, 34);
+            this.sinWaveOn.Text = "On";
+            this.sinWaveOn.Click += new System.EventHandler(this.onToolStripMenuItem_Click);
             // 
             // flowLayoutPanel1
             // 
@@ -544,7 +559,7 @@ namespace Project
             this.statusStripChannels,
             this.timerDFT,
             this.windowingStatus});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 842);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 839);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Padding = new System.Windows.Forms.Padding(10, 0, 1, 0);
             this.statusStrip1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -591,14 +606,14 @@ namespace Project
             this.tableLayoutPanel4.Controls.Add(this.statusStrip1, 0, 2);
             this.tableLayoutPanel4.Controls.Add(this.flowLayoutPanel1, 0, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 33);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 36);
             this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 3;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(1184, 882);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(1184, 879);
             this.tableLayoutPanel4.TabIndex = 15;
             // 
             // tableLayoutPanel5
@@ -617,7 +632,7 @@ namespace Project
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(1180, 798);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(1180, 795);
             this.tableLayoutPanel5.TabIndex = 0;
             // 
             // tableLayoutPanel6
@@ -628,29 +643,14 @@ namespace Project
             this.tableLayoutPanel6.Controls.Add(this.chart4, 1, 0);
             this.tableLayoutPanel6.Controls.Add(this.chart2, 0, 0);
             this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(2, 268);
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(2, 267);
             this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.RowCount = 1;
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(1176, 262);
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(1176, 261);
             this.tableLayoutPanel6.TabIndex = 0;
-            // 
-            // sineToolStripMenuItem
-            // 
-            this.sineToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.sinWaveOn});
-            this.sineToolStripMenuItem.Name = "sineToolStripMenuItem";
-            this.sineToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
-            this.sineToolStripMenuItem.Text = "Sine";
-            // 
-            // sinWaveOn
-            // 
-            this.sinWaveOn.Name = "sinWaveOn";
-            this.sinWaveOn.Size = new System.Drawing.Size(270, 34);
-            this.sinWaveOn.Text = "On";
-            this.sinWaveOn.Click += new System.EventHandler(this.onToolStripMenuItem_Click);
             // 
             // WaveAnalyzer
             // 
