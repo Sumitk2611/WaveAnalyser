@@ -258,24 +258,26 @@ namespace Project
             Chart chart = (Chart)sender;
             if (e.Delta < 0)
             {
-                chart.ChartAreas[0].AxisX.ScaleView.ZoomReset(1);
-                chart.ChartAreas[0].AxisY.ScaleView.ZoomReset(1);
+                double xMin = chart.ChartAreas[0].AxisX.ScaleView.ViewMinimum;
+                double xMax = chart.ChartAreas[0].AxisX.ScaleView.ViewMaximum;
+
+                double posXStart = chart.ChartAreas[0].AxisX.PixelPositionToValue(e.Location.X) - (xMax - xMin) / 4;
+                double posXFinish = chart.ChartAreas[0].AxisX.PixelPositionToValue(e.Location.X) + (xMax - xMin) / 4;
+
+
+                chart.ChartAreas[0].AxisX.ScaleView.Zoom(posXStart, posXFinish, DateTimeIntervalType.Number, true);
             }
             else
             {
 
                 double xMin = chart.ChartAreas[0].AxisX.ScaleView.ViewMinimum;
                 double xMax = chart.ChartAreas[0].AxisX.ScaleView.ViewMaximum;
-                double yMin = chart.ChartAreas[0].AxisY.ScaleView.ViewMinimum;
-                double yMax = chart.ChartAreas[0].AxisY.ScaleView.ViewMaximum;
 
                 double posXStart = chart.ChartAreas[0].AxisX.PixelPositionToValue(e.Location.X) - (xMax - xMin) / 4;
                 double posXFinish = chart.ChartAreas[0].AxisX.PixelPositionToValue(e.Location.X) + (xMax - xMin) / 4;
-                double posYStart = chart.ChartAreas[0].AxisY.PixelPositionToValue(e.Location.Y) - (yMax - yMin) / 4;
-                double posYFinish = chart.ChartAreas[0].AxisY.PixelPositionToValue(e.Location.Y) + (yMax - yMin) / 4;
+
 
                 chart.ChartAreas[0].AxisX.ScaleView.Zoom(posXStart, posXFinish, DateTimeIntervalType.Number, true);
-                chart.ChartAreas[0].AxisY.ScaleView.Zoom(posYStart, posYFinish, DateTimeIntervalType.Number, true);
             }
         }
 
