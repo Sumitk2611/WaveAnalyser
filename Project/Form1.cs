@@ -258,14 +258,8 @@ namespace Project
             Chart chart = (Chart)sender;
             if (e.Delta < 0)
             {
-                double xMin = chart.ChartAreas[0].AxisX.ScaleView.ViewMinimum;
-                double xMax = chart.ChartAreas[0].AxisX.ScaleView.ViewMaximum;
-
-                double posXStart = chart.ChartAreas[0].AxisX.PixelPositionToValue(e.Location.X) - (xMax - xMin) / 4;
-                double posXFinish = chart.ChartAreas[0].AxisX.PixelPositionToValue(e.Location.X) + (xMax - xMin) / 4;
-
-
-                chart.ChartAreas[0].AxisX.ScaleView.Zoom(posXStart, posXFinish, DateTimeIntervalType.Number, true);
+                chart.ChartAreas[0].AxisX.ScaleView.ZoomReset(1);
+                chart.ChartAreas[0].AxisY.ScaleView.ZoomReset(1);
             }
             else
             {
