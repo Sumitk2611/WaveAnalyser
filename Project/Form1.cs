@@ -34,12 +34,12 @@ namespace Project
         bool isGaussianWindow = false;
         bool isSineWindow = false;
 
-        static string fileOpen;
-        static int N;
-        static int bitsPerSample;
-        static bool isStereo;
-        static int channel;
-        static double[][] storedData;
+        string fileOpen;
+        int N;
+        int bitsPerSample;
+        bool isStereo;
+        int channel;
+        double[][] storedData;
         const double MaxValue16Bit = 32767.0;
         double[] selectedSamples;
         bool threading = false;
@@ -939,7 +939,16 @@ namespace Project
         {
             string doubleArrayAsString = Clipboard.GetText();
             string[] stringValues = doubleArrayAsString.Split(',');
-            double[] s = Array.ConvertAll(stringValues, double.Parse);
+            double[] samplesPlusSampleRate = Array.ConvertAll(stringValues, double.Parse);
+
+            //Extract origin sample rate from the clipboard
+            double[] originSamples = new double[samplesPlusSampleRate.Length - 1];
+            Array.Copy(samplesPlusSampleRate, originSamples, originSamples.Length);
+            int originSampleRate = (int)samplesPlusSampleRate[samplesPlusSampleRate.Length - 1];
+
+            //Check if up/down sampling needed
+            double[] s = checkSampleRate(originSamples, originSampleRate);
+
             double[] samples = new double[s.Length + chart.Series[0].Points.Count - selectedSamples.Length];
             double lastXvalue = chart.Series[0].Points.Count - 1;
             int counter = 0;
@@ -986,6 +995,10 @@ namespace Project
                 return;
             }
             string doubleArrayAsString = string.Join(",", selectedSamples);
+
+            //Attach sample rate to the end of the string
+            doubleArrayAsString = doubleArrayAsString + "," + N.ToString();
+
             Clipboard.SetText(doubleArrayAsString);
         }
 
@@ -1018,6 +1031,9 @@ namespace Project
 
             string doubleArrayAsString = string.Join(",", selectedSamples);
 
+            //Attach sample rate to the end of the string
+            doubleArrayAsString = doubleArrayAsString + "," + N.ToString();
+
             Series samples = chart.Series[0];
             int pointsRemoved = (int)(endX - startX);
             double[] newSamples = new double[samples.Points.Count - pointsRemoved];
@@ -1038,6 +1054,70 @@ namespace Project
 
             Clipboard.SetText(doubleArrayAsString);
             return newSamples;
+        }
+
+        /// <summary>
+        /// Check if the samples need to be resampled to the sample rate of the target signla
+        /// </summary>
+        /// <param name="originSamples"></param>
+        /// <param name="originSampleRate"></param>
+        /// <returns></returns>
+        private double[] checkSampleRate(double[] originSamples, int originSampleRate)
+        {
+            if (originSampleRate > N)
+            {
+                //Down sampling
+                return downSampleSignal(originSamples, originSampleRate, N);
+            } else if (originSampleRate < N)
+            {
+                //Up sampling
+                return upSampleSignal(originSamples, originSampleRate, N);
+            } else
+            {
+                return originSamples;
+            }
+        }
+
+        /// <summary>
+        /// Up sample the signal by inserting zeroes
+        /// </summary>
+        /// <param name="signal"></param>
+        /// <param name="originalSampleRate"></param>
+        /// <param name="targetSampleRate"></param>
+        /// <returns></returns>
+        private double[] upSampleSignal(double[] signal, int originalSampleRate, int targetSampleRate)
+        {
+            //Upsample by inserting zero-valued samples
+            int upsampleFactor = targetSampleRate / originalSampleRate;
+            double[] upsampledSignal = new double[signal.Length * upsampleFactor];
+
+            for (int i = 0; i < signal.Length; i++)
+            {
+                upsampledSignal[i * upsampleFactor] = signal[i];
+            }
+
+            return upsampledSignal;
+        }
+
+        /// <summary>
+        /// Down sample the signal by discard every other sample
+        /// </summary>
+        /// <param name="signal"></param>
+        /// <param name="originalSampleRate"></param>
+        /// <param name="targetSampleRate"></param>
+        /// <returns></returns>
+        private double[] downSampleSignal(double[] signal, int originalSampleRate, int targetSampleRate)
+        {
+            //Discard every other sample
+            int decimationFactor = originalSampleRate / targetSampleRate;
+            double[] downsampledSignal = new double[signal.Length / decimationFactor];
+
+            for (int i = 0; i < downsampledSignal.Length; i++)
+            {
+                downsampledSignal[i] = signal[i * decimationFactor];
+            }
+
+            return downsampledSignal;
         }
 
         private void cutchart2ToolStripMenuItem_Click(object sender, EventArgs e)
