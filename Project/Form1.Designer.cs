@@ -693,8 +693,8 @@ namespace Project
                 
                 
                 var series = chart.Series[0];
-                chartArea1.AxisX.Title = "time";
-                chartArea1.AxisY.Title = "Amplitude";
+                chartArea1.AxisX.Title = "Time (s)";
+                chartArea1.AxisY.Title = "Amplitude (V)";
                 series.BorderWidth = 3;
                 series.Color = Color.Yellow;
                 chartArea1.BackColor = Color.Black;
@@ -702,7 +702,7 @@ namespace Project
                 chartArea1.AxisX2.MajorGrid.LineColor = Color.LawnGreen;
                 chartArea1.AxisX.LineWidth = 2;
                 chartArea1.AxisY.MajorGrid.LineColor = Color.LawnGreen;
-                chartArea1.AxisY2.MajorGrid.LineColor = Color.LawnGreen;  
+                chartArea1.AxisY2.MajorGrid.LineColor = Color.LawnGreen;
 
                 chartArea1.AxisX.Minimum = 0;
                 chartArea1.CursorX.AutoScroll = true;
@@ -722,15 +722,6 @@ namespace Project
                 chartArea1.AxisX.ScrollBar.ButtonStyle = ScrollBarButtonStyles.SmallScroll;
                 chartArea1.AxisY.ScrollBar.ButtonStyle = ScrollBarButtonStyles.SmallScroll;
 
-                
-                chartArea1.AxisX.ScrollBar.ButtonColor = Color.WhiteSmoke;
-                chartArea1.AxisX.ScrollBar.LineColor = Color.White;
-                chartArea1.AxisX.ScrollBar.IsPositionedInside = true;
-                chartArea1.CursorX.AutoScroll = true;
-                chartArea1.CursorX.IsUserSelectionEnabled = true;
-                chartArea1.AxisX.LabelStyle.Format = "0";
-
-                
                 chartArea1.AxisY.ScrollBar.ButtonColor = Color.WhiteSmoke;
                 chartArea1.AxisY.ScrollBar.LineColor = Color.White;
                 chartArea1.AxisY.ScrollBar.IsPositionedInside = true;
@@ -747,8 +738,8 @@ namespace Project
             }
             else
             {
-                chartArea1.AxisX.Title = "frequency";
-                chartArea1.AxisY.Title = "Amplitude";
+                chartArea1.AxisX.Title = "Frequency (Hz)";
+                chartArea1.AxisY.Title = "Amplitude (V)";
                 chartArea1.AxisX.LabelStyle.Format = "0.00";
                 chartArea1.AxisY.LabelStyle.Format = "0.00";
                 

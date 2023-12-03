@@ -90,11 +90,31 @@ namespace Project
             chart.Series[0].Points.Clear();
             for (int t = 0; t < s.Length; t++)
             {
-
                 chart.Series[0].Points.AddXY(t, s[t]);
             }
+            //Set x axis
+            setXAxisLabels(chart, s.Length);
+            //Set the chart to be visible
             chart.Visible = true;
 
+        }
+
+        /// <summary>
+        /// Converting x-axis units to seconds
+        /// </summary>
+        /// <param name="chart">the chart of time domain</param>
+        /// <param name="size">size of sample</param>
+        private void setXAxisLabels(Chart chart, int size)
+        {
+            chart.ChartAreas[0].AxisX.CustomLabels.Clear();
+            for (int i = 0; i < size; i += N)
+            {
+                CustomLabel customLabel = new CustomLabel();
+                customLabel.Text = ((i / N) + 1).ToString();
+                customLabel.ToPosition = (i + N) * 2;
+                chart.ChartAreas[0].AxisX.CustomLabels.Add(customLabel);
+            }
+            chart.ChartAreas[0].AxisX.Interval = N;
         }
 
         /// <summary>
@@ -362,10 +382,9 @@ namespace Project
                     {
                         s[0][i] /= MaxValue16Bit;
                         s[1][i] /= MaxValue16Bit;
-                        chart1.Series[0].Points.AddXY(i, s[0][i]);
-                        chart3.Series[0].Points.AddXY(i, s[1][i]);
                     }
-
+                    CreateAmplitudeChart(s[0], chart1);
+                    CreateAmplitudeChart(s[1], chart3);
 
                 }
                 storedData = s;
@@ -797,8 +816,8 @@ namespace Project
                         for (int i = 0; i < audio16.Length; i++)
                         {
                             storedData[0][i] = audio16[i] / MaxValue16Bit;
-                            chart1.Series[0].Points.AddXY(i, storedData[0][i]);
                         }
+                        CreateAmplitudeChart(storedData[0], chart1);
                     }
 
                 }
