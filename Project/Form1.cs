@@ -107,14 +107,24 @@ namespace Project
         private void setXAxisLabels(Chart chart, int size)
         {
             chart.ChartAreas[0].AxisX.CustomLabels.Clear();
+            chart.ChartAreas[0].AxisX.StripLines.Clear();
             for (int i = 0; i < size; i += N)
             {
-                CustomLabel customLabel = new CustomLabel();
-                customLabel.Text = ((i / N) + 1).ToString();
-                customLabel.ToPosition = (i + N) * 2;
+                CustomLabel customLabel = new CustomLabel
+                {
+                    Text = ((i / N) + 1).ToString(),
+                    ToPosition = (i + N) * 2
+                };
                 chart.ChartAreas[0].AxisX.CustomLabels.Add(customLabel);
+
+                StripLine stripLine = new StripLine
+                {
+                    IntervalOffset = i,
+                    StripWidth = 0.1,
+                    BackColor = System.Drawing.Color.LawnGreen
+                };
+                chart.ChartAreas[0].AxisX.StripLines.Add(stripLine);
             }
-            chart.ChartAreas[0].AxisX.Interval = N;
         }
 
         /// <summary>

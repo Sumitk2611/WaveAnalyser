@@ -706,7 +706,8 @@ namespace Project
 
                 chartArea1.AxisX.Minimum = 0;
                 chartArea1.CursorX.AutoScroll = true;
-                chartArea1.CursorY.AutoScroll = true; 
+                chartArea1.CursorY.AutoScroll = true;
+                chartArea1.AxisX.MajorGrid.Enabled = false;
 
 
                 chartArea1.AxisX.ScaleView.Zoomable = false;
@@ -722,9 +723,9 @@ namespace Project
                 chartArea1.AxisX.ScrollBar.ButtonStyle = ScrollBarButtonStyles.SmallScroll;
                 chartArea1.AxisY.ScrollBar.ButtonStyle = ScrollBarButtonStyles.SmallScroll;
 
-                chartArea1.AxisY.ScrollBar.ButtonColor = Color.WhiteSmoke;
-                chartArea1.AxisY.ScrollBar.LineColor = Color.White;
-                chartArea1.AxisY.ScrollBar.IsPositionedInside = true;
+                chartArea1.AxisX.ScrollBar.ButtonColor = Color.WhiteSmoke;
+                chartArea1.AxisX.ScrollBar.LineColor = Color.White;
+                chartArea1.AxisX.ScrollBar.IsPositionedInside = true;
                 chartArea1.CursorX.AutoScroll = true;
                 chartArea1.CursorX.IsUserSelectionEnabled = true;
                 chartArea1.AxisY.LabelStyle.Format = "0.00";
@@ -753,8 +754,8 @@ namespace Project
             }
             
         }
-        
-        
+
+
 
         private void modifyChart()
         {
