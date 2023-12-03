@@ -276,24 +276,27 @@ namespace Project
         private void makeChartZoomable(object sender, MouseEventArgs e)
         {
             Chart chart = (Chart)sender;
+            double xMin = chart.ChartAreas[0].AxisX.ScaleView.ViewMinimum;
+            double xMax = chart.ChartAreas[0].AxisX.ScaleView.ViewMaximum;
+            double mouseX = chart.ChartAreas[0].AxisX.PixelPositionToValue(e.Location.X);
+            double zoomFactor = 1.2; // Adjust the zoom factor as needed
+
             if (e.Delta < 0)
             {
-                chart.ChartAreas[0].AxisX.ScaleView.ZoomReset(1);
-                chart.ChartAreas[0].AxisY.ScaleView.ZoomReset(1);
+                // Zoom out
+                double newPosXStart = mouseX - (mouseX - xMin) * zoomFactor;
+                double newPosXFinish = mouseX + (xMax - mouseX) * zoomFactor;
+                chart.ChartAreas[0].AxisX.ScaleView.Zoom(newPosXStart, newPosXFinish);
             }
             else
             {
-
-                double xMin = chart.ChartAreas[0].AxisX.ScaleView.ViewMinimum;
-                double xMax = chart.ChartAreas[0].AxisX.ScaleView.ViewMaximum;
-
-                double posXStart = chart.ChartAreas[0].AxisX.PixelPositionToValue(e.Location.X) - (xMax - xMin) / 4;
-                double posXFinish = chart.ChartAreas[0].AxisX.PixelPositionToValue(e.Location.X) + (xMax - xMin) / 4;
-
-
-                chart.ChartAreas[0].AxisX.ScaleView.Zoom(posXStart, posXFinish, DateTimeIntervalType.Number, true);
+                // Zoom in
+                double newPosXStart = mouseX - (mouseX - xMin) / zoomFactor;
+                double newPosXFinish = mouseX + (xMax - mouseX) / zoomFactor;
+                chart.ChartAreas[0].AxisX.ScaleView.Zoom(newPosXStart, newPosXFinish);
             }
         }
+
 
         /// <summary>
         /// Opens a new window
