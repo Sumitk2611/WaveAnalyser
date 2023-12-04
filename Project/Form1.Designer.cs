@@ -197,6 +197,7 @@ namespace Project
             this.chart4.Name = "chart4";
             series4.ChartArea = "ChartArea1";
             series4.Legend = "Legend1";
+            series4.IsVisibleInLegend = false;
             series4.Name = "Series1";
             this.chart4.Series.Add(series4);
             this.chart4.Size = new System.Drawing.Size(582, 253);
