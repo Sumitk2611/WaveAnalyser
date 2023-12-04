@@ -634,7 +634,7 @@ namespace Project
         /// </summary>
         private void SaveFile()
         {
-            if (storedData.Length != 0)
+            if (storedData != null && storedData.Length != 0)
             {
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Title = "Select a File";
@@ -647,6 +647,9 @@ namespace Project
                     writeFile(fileOpen, storedData);
 
                 }
+            } else
+            {
+                MessageBox.Show("No data stored", "Error");
             }
         }
 
