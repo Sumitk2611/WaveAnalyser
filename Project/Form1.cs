@@ -74,6 +74,7 @@ namespace Project
         {
             modifyChart();
             displayDefault();
+            channel = 1;
             chart3.Visible = false;
             chart4.Visible = false;
             chart4.Series[0].Color = Color.Red;
@@ -957,7 +958,7 @@ namespace Project
 
         private void pasteToChart1_Click(object sender, EventArgs e)
         {
-
+            if (storedData == null) storedData = new double[2][];
             storedData[0] = pasteToChart(chart1);
         }
 
@@ -990,6 +991,11 @@ namespace Project
             double[] newSamples = new double[chartsamples.Points.Count - pointsRemoved + 1];
 
             //remove the other samples
+            if(chartsamples.Points.Count == 1)
+            {
+                CreateAmplitudeChart(s, chart);
+                return samples;
+            }
             int cutCounter = 0;
             for (int t = 0; t < chartsamples.Points.Count; ++t)
             {
@@ -1036,6 +1042,7 @@ namespace Project
 
         private void pasteToChart2_Click_1(object sender, EventArgs e)
         {
+            if (storedData == null) storedData = new double[2][];
             storedData[1] = pasteToChart(chart3);
         }
 
@@ -1096,6 +1103,10 @@ namespace Project
         /// <returns></returns>
         private double[] checkSampleRate(double[] originSamples, int originSampleRate)
         {
+            if (N == 0) {
+                N = originSampleRate;
+                return originSamples; 
+            }
             if (originSampleRate > N)
             {
                 //Down sampling
@@ -1194,14 +1205,15 @@ namespace Project
             {
                 selectedSamples[i] = storedData[0][i + (int)startX];
             }
+            CreateAmplitudeChart(storedData[0], chart1);
+            if(channel == 2)
+            CreateAmplitudeChart(storedData[1], chart3);
             if (sentFilterReq == chart2)
             {
-                CreateAmplitudeChart(storedData[0], chart1);
                 CreateFreqChart(selectedSamples, N, chart2);
             }
             else
             {
-                CreateAmplitudeChart(storedData[1], chart3);
                 CreateFreqChart(selectedSamples, N, chart4);
             }
 
