@@ -17,7 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
-using NAudio.Wave;
+
 
 namespace Project
 {
